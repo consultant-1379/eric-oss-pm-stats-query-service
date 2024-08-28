@@ -1,0 +1,26 @@
+#
+# COPYRIGHT Ericsson 2023
+#
+#
+#
+# The copyright to the computer program(s) herein is the property of
+#
+# Ericsson Inc. The programs may be used and/or copied only with written
+#
+# permission from Ericsson Inc. or in accordance with the terms and
+#
+# conditions stipulated in the agreement/contract under which the
+#
+# program(s) have been supplied.
+#
+
+productName: "eric-oss-pm-stats-query-service HELM"
+productNumber: "CXD 101 270"
+images:
+  eric-oss-pm-stats-query-service:
+    productName: "eric-oss-pm-stats-query-service IMAGE"
+    productNumber: "CXU 101 1310"
+    registry: "armdocker.rnd.ericsson.se"
+    repoPath: REPO_PATH
+    name: "eric-oss-pm-stats-query-service"
+    tag: VERSION

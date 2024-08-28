@@ -1,0 +1,644 @@
+#
+# COPYRIGHT Ericsson 2024
+#
+#
+#
+# The copyright to the computer program(s) herein is the property of
+#
+# Ericsson Inc. The programs may be used and/or copied only with written
+#
+# permission from Ericsson Inc. or in accordance with the terms and
+#
+# conditions stipulated in the agreement/contract under which the
+#
+# program(s) have been supplied.
+#
+
+{{- if .Values.cnomServer.enabled }}
+{{- $podLabel := include "eric-oss-pm-stats-query-service.cnom-pod-label" . }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "eric-oss-pm-stats-query-service.name.noQuote" . }}-custom-metrics-configmap
+  labels:
+    {{- include "eric-oss-pm-stats-query-service.cnom-configmap-labels" . | nindent 4 }}
+  annotations:
+    {{- include "eric-oss-pm-stats-query-service.annotations" . | nindent 4 }}
+data:
+  custom-metrics-configmap.json: |
+    {
+      "namespace": "PMH_QS_CUSTOM",
+      "dashboards": [
+        {
+          "_id": "eric_oss_pm_stats_query_service_custom_metrics_dashboard",
+          "title": "PM Stats Query Service CUSTOM Metrics",
+          "apps": ["statusOverview"],
+          "dashboardTreeView": {
+            "tree": [["PM Stats Calculation Handling", "PM Stats Query Service", "CUSTOM Metrics"]]
+          },
+          "order": 0,
+          "tiles": [
+            {
+              "xSize": 5,
+              "widget": "widget_timeline_number_of_served_queries"
+            },
+            {
+              "xSize": 5,
+              "widget": "widget_pm_stats_query_service_build_count_query_timer_seconds_count"
+            },
+            {
+              "xSize": 5,
+              "widget": "widget_pm_stats_query_service_build_count_query_timer_seconds_max"
+            },
+            {
+              "xSize": 5,
+              "widget": "widget_pm_stats_query_service_build_count_query_timer_seconds_sum"
+            },
+            {
+              "xSize": 5,
+              "widget": "widget_pm_stats_query_service_build_listing_query_timer_seconds_count"
+            },
+            {
+              "xSize": 5,
+              "widget": "widget_pm_stats_query_service_build_listing_query_timer_seconds_max"
+            },
+            {
+              "xSize": 5,
+              "widget": "widget_pm_stats_query_service_build_listing_query_timer_seconds_sum"
+            },
+            {
+              "xSize": 5,
+              "widget": "widget_pm_stats_query_service_built_count_queries_counter_total"
+            },
+            {
+              "xSize": 5,
+              "widget": "widget_pm_stats_query_service_built_listing_queries_counter_total"
+            },
+            {
+              "xSize": 5,
+              "widget": "widget_pm_stats_query_service_convert_result_list_timer_seconds_count"
+            },
+            {
+              "xSize": 5,
+              "widget": "widget_pm_stats_query_service_convert_result_list_timer_seconds_max"
+            },
+            {
+              "xSize": 5,
+              "widget": "widget_pm_stats_query_service_convert_result_list_timer_seconds_sum"
+            },
+            {
+              "xSize": 5,
+              "widget": "widget_pm_stats_query_service_count_query_execution_timer_seconds_count"
+            },
+            {
+              "xSize": 5,
+              "widget": "widget_pm_stats_query_service_count_query_execution_timer_seconds_max"
+            },
+            {
+              "xSize": 5,
+              "widget": "widget_pm_stats_query_service_count_query_execution_timer_seconds_sum"
+            },
+            {
+              "xSize": 5,
+              "widget": "widget_pm_stats_query_service_executed_count_queries_counter_total"
+            },
+            {
+              "xSize": 5,
+              "widget": "widget_pm_stats_query_service_executed_listing_queries_counter_total"
+            },
+            {
+              "xSize": 5,
+              "widget": "widget_pm_stats_query_service_exposed_schemas_gauge"
+            },
+            {
+              "xSize": 5,
+              "widget": "widget_pm_stats_query_service_get_schema_timer_seconds_count"
+            },
+            {
+              "xSize": 5,
+              "widget": "widget_pm_stats_query_service_get_schema_timer_seconds_max"
+            },
+            {
+              "xSize": 5,
+              "widget": "widget_pm_stats_query_service_get_schema_timer_seconds_sum"
+            },
+            {
+              "xSize": 5,
+              "widget": "widget_pm_stats_query_service_get_table_timer_seconds_count"
+            },
+            {
+              "xSize": 5,
+              "widget": "widget_pm_stats_query_service_get_table_timer_seconds_max"
+            },
+            {
+              "xSize": 5,
+              "widget": "widget_pm_stats_query_service_get_table_timer_seconds_sum"
+            },
+            {
+              "xSize": 5,
+              "widget": "widget_pm_stats_query_service_list_columns_timer_seconds_count"
+            },
+            {
+              "xSize": 5,
+              "widget": "widget_pm_stats_query_service_list_columns_timer_seconds_max"
+            },
+            {
+              "xSize": 5,
+              "widget": "widget_pm_stats_query_service_list_columns_timer_seconds_sum"
+            },
+            {
+              "xSize": 5,
+              "widget": "widget_pm_stats_query_service_list_tables_timer_seconds_count"
+            },
+            {
+              "xSize": 5,
+              "widget": "widget_pm_stats_query_service_list_tables_timer_seconds_max"
+            },
+            {
+              "xSize": 5,
+              "widget": "widget_pm_stats_query_service_list_tables_timer_seconds_sum"
+            },
+            {
+              "xSize": 5,
+              "widget": "widget_pm_stats_query_service_query_execution_timer_seconds_count"
+            },
+            {
+              "xSize": 5,
+              "widget": "widget_pm_stats_query_service_query_execution_timer_seconds_max"
+            },
+            {
+              "xSize": 5,
+              "widget": "widget_pm_stats_query_service_query_execution_timer_seconds_sum"
+            },
+            {
+              "xSize": 5,
+              "widget": "widget_pm_stats_query_service_records_counter_total"
+            },
+            {
+              "xSize": 5,
+              "widget": "widget_pm_stats_query_service_schema_change_events_counter_total"
+            },
+            {
+              "xSize": 5,
+              "widget": "widget_pm_stats_query_service_served_queries_counter_total"
+            }
+          ]
+        }
+      ],
+      "widgets": [
+        {
+          "_id": "widget_timeline_number_of_served_queries",
+          "widgetType": "timeline",
+          "title": "Number of served queries",
+          "sources": [{ "source": "source_number_of_served_queries" }]
+        },
+        {
+          "_id": "widget_pm_stats_query_service_build_count_query_timer_seconds_count",
+          "widgetType": "timeline",
+          "title": "Build count query timer count",
+          "sources": [{ "source": "source_pm_stats_query_service_build_count_query_timer_seconds_count" }]
+        },
+        {
+          "_id": "widget_pm_stats_query_service_build_count_query_timer_seconds_max",
+          "widgetType": "timeline",
+          "title": "Build count query timer max",
+          "unit": "sec",
+          "sources": [{ "source": "source_pm_stats_query_service_build_count_query_timer_seconds_max" }]
+        },
+        {
+          "_id": "widget_pm_stats_query_service_build_count_query_timer_seconds_sum",
+          "widgetType": "timeline",
+          "title": "Build count query timer sum",
+          "unit": "sec",
+          "sources": [{ "source": "source_pm_stats_query_service_build_count_query_timer_seconds_sum" }]
+        },
+        {
+          "_id": "widget_pm_stats_query_service_build_listing_query_timer_seconds_count",
+          "widgetType": "timeline",
+          "title": "Build listing query timer count",
+          "sources": [{ "source": "source_pm_stats_query_service_build_listing_query_timer_seconds_count" }]
+        },
+        {
+          "_id": "widget_pm_stats_query_service_build_listing_query_timer_seconds_max",
+          "widgetType": "timeline",
+          "title": "Build listing query timer max",
+          "unit": "sec",
+          "sources": [{ "source": "source_pm_stats_query_service_build_listing_query_timer_seconds_max" }]
+        },
+        {
+          "_id": "widget_pm_stats_query_service_build_listing_query_timer_seconds_sum",
+          "widgetType": "timeline",
+          "title": "Build listing query timer sum",
+          "unit": "sec",
+          "sources": [{ "source": "source_pm_stats_query_service_build_listing_query_timer_seconds_sum" }]
+        },
+        {
+          "_id": "widget_pm_stats_query_service_built_count_queries_counter_total",
+          "widgetType": "timeline",
+          "title": "Built count queries",
+          "sources": [{ "source": "source_pm_stats_query_service_built_count_queries_counter_total" }]
+        },
+        {
+          "_id": "widget_pm_stats_query_service_built_listing_queries_counter_total",
+          "widgetType": "timeline",
+          "title": "Built listing queries",
+          "sources": [{ "source": "source_pm_stats_query_service_built_listing_queries_counter_total" }]
+        },
+        {
+          "_id": "widget_pm_stats_query_service_convert_result_list_timer_seconds_count",
+          "widgetType": "timeline",
+          "title": "Convert result list timer count",
+          "sources": [{ "source": "source_pm_stats_query_service_convert_result_list_timer_seconds_count" }]
+        },
+        {
+          "_id": "widget_pm_stats_query_service_convert_result_list_timer_seconds_max",
+          "widgetType": "timeline",
+          "title": "Convert result list timer max",
+          "unit": "sec",
+          "sources": [{ "source": "source_pm_stats_query_service_convert_result_list_timer_seconds_max" }]
+        },
+        {
+          "_id": "widget_pm_stats_query_service_convert_result_list_timer_seconds_sum",
+          "widgetType": "timeline",
+          "title": "Convert result list timer sum",
+          "unit": "sec",
+          "sources": [{ "source": "source_pm_stats_query_service_convert_result_list_timer_seconds_sum" }]
+        },
+        {
+          "_id": "widget_pm_stats_query_service_count_query_execution_timer_seconds_count",
+          "widgetType": "timeline",
+          "title": "Count query execution timer count",
+          "sources": [{ "source": "source_pm_stats_query_service_count_query_execution_timer_seconds_count" }]
+        },
+        {
+          "_id": "widget_pm_stats_query_service_count_query_execution_timer_seconds_max",
+          "widgetType": "timeline",
+          "title": "Count query execution timer max",
+          "unit": "sec",
+          "sources": [{ "source": "source_pm_stats_query_service_count_query_execution_timer_seconds_max" }]
+        },
+        {
+          "_id": "widget_pm_stats_query_service_count_query_execution_timer_seconds_sum",
+          "widgetType": "timeline",
+          "title": "Count query execution timer sum",
+          "unit": "sec",
+          "sources": [{ "source": "source_pm_stats_query_service_count_query_execution_timer_seconds_sum" }]
+        },
+        {
+          "_id": "widget_pm_stats_query_service_executed_count_queries_counter_total",
+          "widgetType": "timeline",
+          "title": "Executed count queries",
+          "sources": [{ "source": "source_pm_stats_query_service_executed_count_queries_counter_total" }]
+        },
+        {
+          "_id": "widget_pm_stats_query_service_executed_listing_queries_counter_total",
+          "widgetType": "timeline",
+          "title": "Executed listing queries",
+          "sources": [{ "source": "source_pm_stats_query_service_executed_listing_queries_counter_total" }]
+        },
+        {
+          "_id": "widget_pm_stats_query_service_exposed_schemas_gauge",
+          "widgetType": "timeline",
+          "title": "Exposed schemas",
+          "sources": [{ "source": "source_pm_stats_query_service_exposed_schemas_gauge" }]
+        },
+        {
+          "_id": "widget_pm_stats_query_service_get_schema_timer_seconds_count",
+          "widgetType": "timeline",
+          "title": "Get schema timer count",
+          "sources": [{ "source": "source_pm_stats_query_service_get_schema_timer_seconds_count" }]
+        },
+        {
+          "_id": "widget_pm_stats_query_service_get_schema_timer_seconds_max",
+          "widgetType": "timeline",
+          "title": "Get schema timer max",
+          "unit": "sec",
+          "sources": [{ "source": "source_pm_stats_query_service_get_schema_timer_seconds_max" }]
+        },
+        {
+          "_id": "widget_pm_stats_query_service_get_schema_timer_seconds_sum",
+          "widgetType": "timeline",
+          "title": "Get schema timer sum",
+          "unit": "sec",
+          "sources": [{ "source": "source_pm_stats_query_service_get_schema_timer_seconds_sum" }]
+        },
+        {
+          "_id": "widget_pm_stats_query_service_get_table_timer_seconds_count",
+          "widgetType": "timeline",
+          "title": "Get table timer count",
+          "sources": [{ "source": "source_pm_stats_query_service_get_table_timer_seconds_count" }]
+        },
+        {
+          "_id": "widget_pm_stats_query_service_get_table_timer_seconds_max",
+          "widgetType": "timeline",
+          "title": "Get table timer max",
+          "unit": "sec",
+          "sources": [{ "source": "source_pm_stats_query_service_get_table_timer_seconds_max" }]
+        },
+        {
+          "_id": "widget_pm_stats_query_service_get_table_timer_seconds_sum",
+          "widgetType": "timeline",
+          "title": "Get table timer sum",
+          "unit": "sec",
+          "sources": [{ "source": "source_pm_stats_query_service_get_table_timer_seconds_sum" }]
+        },
+        {
+          "_id": "widget_pm_stats_query_service_list_columns_timer_seconds_count",
+          "widgetType": "timeline",
+          "title": "List columns timer count",
+          "sources": [{ "source": "source_pm_stats_query_service_list_columns_timer_seconds_count" }]
+        },
+        {
+          "_id": "widget_pm_stats_query_service_list_columns_timer_seconds_max",
+          "widgetType": "timeline",
+          "title": "List columns timer max",
+          "unit": "sec",
+          "sources": [{ "source": "source_pm_stats_query_service_list_columns_timer_seconds_max" }]
+        },
+        {
+          "_id": "widget_pm_stats_query_service_list_columns_timer_seconds_sum",
+          "widgetType": "timeline",
+          "title": "List columns timer sum",
+          "unit": "sec",
+          "sources": [{ "source": "source_pm_stats_query_service_list_columns_timer_seconds_sum" }]
+        },
+        {
+          "_id": "widget_pm_stats_query_service_list_tables_timer_seconds_count",
+          "widgetType": "timeline",
+          "title": "List tables timer count",
+          "sources": [{ "source": "source_pm_stats_query_service_list_tables_timer_seconds_count" }]
+        },
+        {
+          "_id": "widget_pm_stats_query_service_list_tables_timer_seconds_max",
+          "widgetType": "timeline",
+          "title": "List tables timer max",
+          "unit": "sec",
+          "sources": [{ "source": "source_pm_stats_query_service_list_tables_timer_seconds_max" }]
+        },
+        {
+          "_id": "widget_pm_stats_query_service_list_tables_timer_seconds_sum",
+          "widgetType": "timeline",
+          "title": "List tables timer sum",
+          "unit": "sec",
+          "sources": [{ "source": "source_pm_stats_query_service_list_tables_timer_seconds_sum" }]
+        },
+        {
+          "_id": "widget_pm_stats_query_service_query_execution_timer_seconds_count",
+          "widgetType": "timeline",
+          "title": "Query execution timer count",
+          "sources": [{ "source": "source_pm_stats_query_service_query_execution_timer_seconds_count" }]
+        },
+        {
+          "_id": "widget_pm_stats_query_service_query_execution_timer_seconds_max",
+          "widgetType": "timeline",
+          "title": "Query execution timer max",
+          "unit": "sec",
+          "sources": [{ "source": "source_pm_stats_query_service_query_execution_timer_seconds_max" }]
+        },
+        {
+          "_id": "widget_pm_stats_query_service_query_execution_timer_seconds_sum",
+          "widgetType": "timeline",
+          "title": "Query execution timer sum",
+          "unit": "sec",
+          "sources": [{ "source": "source_pm_stats_query_service_query_execution_timer_seconds_sum" }]
+        },
+        {
+          "_id": "widget_pm_stats_query_service_records_counter_total",
+          "widgetType": "timeline",
+          "title": "Queried records",
+          "sources": [{ "source": "source_pm_stats_query_service_records_counter_total" }]
+        },
+        {
+          "_id": "widget_pm_stats_query_service_schema_change_events_counter_total",
+          "widgetType": "timeline",
+          "title": "Schema change events",
+          "sources": [{ "source": "source_pm_stats_query_service_schema_change_events_counter_total" }]
+        },
+        {
+          "_id": "widget_pm_stats_query_service_served_queries_counter_total",
+          "widgetType": "timeline",
+          "title": "Served queries",
+          "sources": [{ "source": "source_pm_stats_query_service_served_queries_counter_total" }]
+        }
+      ],
+      "sources": [
+        {
+          "_id": "source_number_of_served_queries",
+          "sourceType": "prometheus",
+          "query": "sum({__name__='pm_stats_query_service_served_queries_counter_total', {{ $podLabel }}=~'eric-oss-pm-stats-query-service.*'}) by ({{ $podLabel }}) - sum({__name__='pm_stats_query_service_served_queries_counter_total',{{ $podLabel }}=~'eric-oss-pm-stats-query-service.*'} offset 60s) by ({{ $podLabel }})",
+          "splitByLabelName": "{{ $podLabel }}",
+          "pollInterval": 60
+        },
+        {
+          "_id": "source_pm_stats_query_service_build_count_query_timer_seconds_count",
+          "sourceType": "prometheus",
+          "query": "pm_stats_query_service_build_count_query_timer_seconds_count{{ print "{" }}{{ $podLabel }}=~'eric-oss-pm-stats-query-service.*'}",
+          "splitByLabelName": "{{ $podLabel }}"
+        },
+        {
+          "_id": "source_pm_stats_query_service_build_count_query_timer_seconds_max",
+          "sourceType": "prometheus",
+          "query": "pm_stats_query_service_build_count_query_timer_seconds_max{{ print "{" }}{{ $podLabel }}=~'eric-oss-pm-stats-query-service.*'}",
+          "splitByLabelName": "{{ $podLabel }}"
+        },
+        {
+          "_id": "source_pm_stats_query_service_build_count_query_timer_seconds_sum",
+          "sourceType": "prometheus",
+          "query": "pm_stats_query_service_build_count_query_timer_seconds_sum{{ print "{" }}{{ $podLabel }}=~'eric-oss-pm-stats-query-service.*'}",
+          "splitByLabelName": "{{ $podLabel }}"
+        },
+        {
+          "_id": "source_pm_stats_query_service_build_listing_query_timer_seconds_count",
+          "sourceType": "prometheus",
+          "query": "pm_stats_query_service_build_listing_query_timer_seconds_count{{ print "{" }}{{ $podLabel }}=~'eric-oss-pm-stats-query-service.*'}",
+          "splitByLabelName": "{{ $podLabel }}"
+        },
+        {
+          "_id": "source_pm_stats_query_service_build_listing_query_timer_seconds_max",
+          "sourceType": "prometheus",
+          "query": "pm_stats_query_service_build_listing_query_timer_seconds_max{{ print "{" }}{{ $podLabel }}=~'eric-oss-pm-stats-query-service.*'}",
+          "splitByLabelName": "{{ $podLabel }}"
+        },
+        {
+          "_id": "source_pm_stats_query_service_build_listing_query_timer_seconds_sum",
+          "sourceType": "prometheus",
+          "query": "pm_stats_query_service_build_listing_query_timer_seconds_sum{{ print "{" }}{{ $podLabel }}=~'eric-oss-pm-stats-query-service.*'}",
+          "splitByLabelName": "{{ $podLabel }}"
+        },
+        {
+          "_id": "source_pm_stats_query_service_built_count_queries_counter_total",
+          "sourceType": "prometheus",
+          "query": "pm_stats_query_service_built_count_queries_counter_total{{ print "{" }}{{ $podLabel }}=~'eric-oss-pm-stats-query-service.*'}",
+          "splitByLabelName": "{{ $podLabel }}"
+        },
+        {
+          "_id": "source_pm_stats_query_service_built_listing_queries_counter_total",
+          "sourceType": "prometheus",
+          "query": "pm_stats_query_service_built_listing_queries_counter_total{{ print "{" }}{{ $podLabel }}=~'eric-oss-pm-stats-query-service.*'}",
+          "splitByLabelName": "{{ $podLabel }}"
+        },
+        {
+          "_id": "source_pm_stats_query_service_convert_result_list_timer_seconds_count",
+          "sourceType": "prometheus",
+          "query": "pm_stats_query_service_convert_result_list_timer_seconds_count{{ print "{" }}{{ $podLabel }}=~'eric-oss-pm-stats-query-service.*'}",
+          "splitByLabelName": "{{ $podLabel }}"
+        },
+        {
+          "_id": "source_pm_stats_query_service_convert_result_list_timer_seconds_max",
+          "sourceType": "prometheus",
+          "query": "pm_stats_query_service_convert_result_list_timer_seconds_max{{ print "{" }}{{ $podLabel }}=~'eric-oss-pm-stats-query-service.*'}",
+          "splitByLabelName": "{{ $podLabel }}"
+        },
+        {
+          "_id": "source_pm_stats_query_service_convert_result_list_timer_seconds_sum",
+          "sourceType": "prometheus",
+          "query": "pm_stats_query_service_convert_result_list_timer_seconds_sum{{ print "{" }}{{ $podLabel }}=~'eric-oss-pm-stats-query-service.*'}",
+          "splitByLabelName": "{{ $podLabel }}"
+        },
+        {
+          "_id": "source_pm_stats_query_service_count_query_execution_timer_seconds_count",
+          "sourceType": "prometheus",
+          "query": "pm_stats_query_service_count_query_execution_timer_seconds_count{{ print "{" }}{{ $podLabel }}=~'eric-oss-pm-stats-query-service.*'}",
+          "splitByLabelName": "{{ $podLabel }}"
+        },
+        {
+          "_id": "source_pm_stats_query_service_count_query_execution_timer_seconds_max",
+          "sourceType": "prometheus",
+          "query": "pm_stats_query_service_count_query_execution_timer_seconds_max{{ print "{" }}{{ $podLabel }}=~'eric-oss-pm-stats-query-service.*'}",
+          "splitByLabelName": "{{ $podLabel }}"
+        },
+        {
+          "_id": "source_pm_stats_query_service_count_query_execution_timer_seconds_sum",
+          "sourceType": "prometheus",
+          "query": "pm_stats_query_service_count_query_execution_timer_seconds_sum{{ print "{" }}{{ $podLabel }}=~'eric-oss-pm-stats-query-service.*'}",
+          "splitByLabelName": "{{ $podLabel }}"
+        },
+        {
+          "_id": "source_pm_stats_query_service_executed_count_queries_counter_total",
+          "sourceType": "prometheus",
+          "query": "pm_stats_query_service_executed_count_queries_counter_total{{ print "{" }}{{ $podLabel }}=~'eric-oss-pm-stats-query-service.*'}",
+          "splitByLabelName": "{{ $podLabel }}"
+        },
+        {
+          "_id": "source_pm_stats_query_service_executed_listing_queries_counter_total",
+          "sourceType": "prometheus",
+          "query": "pm_stats_query_service_executed_listing_queries_counter_total{{ print "{" }}{{ $podLabel }}=~'eric-oss-pm-stats-query-service.*'}",
+          "splitByLabelName": "{{ $podLabel }}"
+        },
+        {
+          "_id": "source_pm_stats_query_service_exposed_schemas_gauge",
+          "sourceType": "prometheus",
+          "query": "pm_stats_query_service_exposed_schemas_gauge{{ print "{" }}{{ $podLabel }}=~'eric-oss-pm-stats-query-service.*'}",
+          "splitByLabelName": "{{ $podLabel }}"
+        },
+        {
+          "_id": "source_pm_stats_query_service_get_schema_timer_seconds_count",
+          "sourceType": "prometheus",
+          "query": "pm_stats_query_service_get_schema_timer_seconds_count{{ print "{" }}{{ $podLabel }}=~'eric-oss-pm-stats-query-service.*'}",
+          "splitByLabelName": "{{ $podLabel }}"
+        },
+        {
+          "_id": "source_pm_stats_query_service_get_schema_timer_seconds_max",
+          "sourceType": "prometheus",
+          "query": "pm_stats_query_service_get_schema_timer_seconds_max{{ print "{" }}{{ $podLabel }}=~'eric-oss-pm-stats-query-service.*'}",
+          "splitByLabelName": "{{ $podLabel }}"
+        },
+        {
+          "_id": "source_pm_stats_query_service_get_schema_timer_seconds_sum",
+          "sourceType": "prometheus",
+          "query": "pm_stats_query_service_get_schema_timer_seconds_sum{{ print "{" }}{{ $podLabel }}=~'eric-oss-pm-stats-query-service.*'}",
+          "splitByLabelName": "{{ $podLabel }}"
+        },
+        {
+          "_id": "source_pm_stats_query_service_get_table_timer_seconds_count",
+          "sourceType": "prometheus",
+          "query": "pm_stats_query_service_get_table_timer_seconds_count{{ print "{" }}{{ $podLabel }}=~'eric-oss-pm-stats-query-service.*'}",
+          "splitByLabelName": "{{ $podLabel }}"
+        },
+        {
+          "_id": "source_pm_stats_query_service_get_table_timer_seconds_max",
+          "sourceType": "prometheus",
+          "query": "pm_stats_query_service_get_table_timer_seconds_max{{ print "{" }}{{ $podLabel }}=~'eric-oss-pm-stats-query-service.*'}",
+          "splitByLabelName": "{{ $podLabel }}"
+        },
+        {
+          "_id": "source_pm_stats_query_service_get_table_timer_seconds_sum",
+          "sourceType": "prometheus",
+          "query": "pm_stats_query_service_get_table_timer_seconds_sum{{ print "{" }}{{ $podLabel }}=~'eric-oss-pm-stats-query-service.*'}",
+          "splitByLabelName": "{{ $podLabel }}"
+        },
+        {
+          "_id": "source_pm_stats_query_service_list_columns_timer_seconds_count",
+          "sourceType": "prometheus",
+          "query": "pm_stats_query_service_list_columns_timer_seconds_count{{ print "{" }}{{ $podLabel }}=~'eric-oss-pm-stats-query-service.*'}",
+          "splitByLabelName": "{{ $podLabel }}"
+        },
+        {
+          "_id": "source_pm_stats_query_service_list_columns_timer_seconds_max",
+          "sourceType": "prometheus",
+          "query": "pm_stats_query_service_list_columns_timer_seconds_max{{ print "{" }}{{ $podLabel }}=~'eric-oss-pm-stats-query-service.*'}",
+          "splitByLabelName": "{{ $podLabel }}"
+        },
+        {
+          "_id": "source_pm_stats_query_service_list_columns_timer_seconds_sum",
+          "sourceType": "prometheus",
+          "query": "pm_stats_query_service_list_columns_timer_seconds_sum{{ print "{" }}{{ $podLabel }}=~'eric-oss-pm-stats-query-service.*'}",
+          "splitByLabelName": "{{ $podLabel }}"
+        },
+        {
+          "_id": "source_pm_stats_query_service_list_tables_timer_seconds_count",
+          "sourceType": "prometheus",
+          "query": "pm_stats_query_service_list_tables_timer_seconds_count{{ print "{" }}{{ $podLabel }}=~'eric-oss-pm-stats-query-service.*'}",
+          "splitByLabelName": "{{ $podLabel }}"
+        },
+        {
+          "_id": "source_pm_stats_query_service_list_tables_timer_seconds_max",
+          "sourceType": "prometheus",
+          "query": "pm_stats_query_service_list_tables_timer_seconds_max{{ print "{" }}{{ $podLabel }}=~'eric-oss-pm-stats-query-service.*'}",
+          "splitByLabelName": "{{ $podLabel }}"
+        },
+        {
+          "_id": "source_pm_stats_query_service_list_tables_timer_seconds_sum",
+          "sourceType": "prometheus",
+          "query": "pm_stats_query_service_list_tables_timer_seconds_sum{{ print "{" }}{{ $podLabel }}=~'eric-oss-pm-stats-query-service.*'}",
+          "splitByLabelName": "{{ $podLabel }}"
+        },
+        {
+          "_id": "source_pm_stats_query_service_query_execution_timer_seconds_count",
+          "sourceType": "prometheus",
+          "query": "pm_stats_query_service_query_execution_timer_seconds_count{{ print "{" }}{{ $podLabel }}=~'eric-oss-pm-stats-query-service.*'}",
+          "splitByLabelName": "{{ $podLabel }}"
+        },
+        {
+          "_id": "source_pm_stats_query_service_query_execution_timer_seconds_max",
+          "sourceType": "prometheus",
+          "query": "pm_stats_query_service_query_execution_timer_seconds_max{{ print "{" }}{{ $podLabel }}=~'eric-oss-pm-stats-query-service.*'}",
+          "splitByLabelName": "{{ $podLabel }}"
+        },
+        {
+          "_id": "source_pm_stats_query_service_query_execution_timer_seconds_sum",
+          "sourceType": "prometheus",
+          "query": "pm_stats_query_service_query_execution_timer_seconds_sum{{ print "{" }}{{ $podLabel }}=~'eric-oss-pm-stats-query-service.*'}",
+          "splitByLabelName": "{{ $podLabel }}"
+        },
+        {
+          "_id": "source_pm_stats_query_service_records_counter_total",
+          "sourceType": "prometheus",
+          "query": "pm_stats_query_service_records_counter_total{{ print "{" }}{{ $podLabel }}=~'eric-oss-pm-stats-query-service.*'}",
+          "splitByLabelName": "{{ $podLabel }}"
+        },
+        {
+          "_id": "source_pm_stats_query_service_schema_change_events_counter_total",
+          "sourceType": "prometheus",
+          "query": "pm_stats_query_service_schema_change_events_counter_total{{ print "{" }}{{ $podLabel }}=~'eric-oss-pm-stats-query-service.*'}",
+          "splitByLabelName": "{{ $podLabel }}"
+        },
+        {
+          "_id": "source_pm_stats_query_service_served_queries_counter_total",
+          "sourceType": "prometheus",
+          "query": "pm_stats_query_service_served_queries_counter_total{{ print "{" }}{{ $podLabel }}=~'eric-oss-pm-stats-query-service.*'}",
+          "splitByLabelName": ["{{ $podLabel }}", "response_status"]
+        }
+      ]
+    }
+{{- end }}

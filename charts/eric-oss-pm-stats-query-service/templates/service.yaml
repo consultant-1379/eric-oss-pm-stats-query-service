@@ -1,0 +1,51 @@
+{{- $serviceMesh := include "eric-oss-pm-stats-query-service.service-mesh-enabled" . | trim -}}
+{{- $tls := include "eric-oss-pm-stats-query-service.global-security-tls-enabled" . | trim -}}
+{{- $osm2ism := include "eric-oss-pm-stats-query-service.osm2ism-enabled" . | trim -}}
+{{- $osmServiceCNOM := include "eric-oss-pm-stats-query-service.osmService-cnom-enabled" . | trim -}}
+#
+# COPYRIGHT Ericsson 2024
+#
+#
+#
+# The copyright to the computer program(s) herein is the property of
+#
+# Ericsson Inc. The programs may be used and/or copied only with written
+#
+# permission from Ericsson Inc. or in accordance with the terms and
+#
+# conditions stipulated in the agreement/contract under which the
+#
+# program(s) have been supplied.
+#
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "eric-oss-pm-stats-query-service.fullname" . }}
+  labels:
+    {{- include "eric-oss-pm-stats-query-service.labels" . | nindent 4 }}
+  annotations:
+{{- include "eric-oss-pm-stats-query-service.annotations" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type | quote }}
+  {{- if .Values.global }}
+  {{- if .Values.global.internalIPFamily }}
+  ipFamilies: [{{ .Values.global.internalIPFamily }}]
+  {{- end }}
+  {{- end }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+      {{- if eq $osm2ism "true" }}
+      targetPort: 9081
+      {{- end }}
+    {{- if and (eq $serviceMesh "true") (eq $tls "true") (eq $osm2ism "true") (eq $osmServiceCNOM "true")}}
+    - name: https-cnom
+      port: 443
+      targetPort: 9080
+    {{- end }}
+  selector:
+    app.kubernetes.io/name: {{ include "eric-oss-pm-stats-query-service.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}

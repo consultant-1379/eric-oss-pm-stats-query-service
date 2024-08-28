@@ -1,0 +1,83 @@
+#
+# COPYRIGHT Ericsson 2024
+#
+#
+#
+# The copyright to the computer program(s) herein is the property of
+#
+# Ericsson Inc. The programs may be used and/or copied only with written
+#
+# permission from Ericsson Inc. or in accordance with the terms and
+#
+# conditions stipulated in the agreement/contract under which the
+#
+# program(s) have been supplied.
+#
+
+repository: eridoca
+folderId: 0b004cffcacd9cfd
+
+# ADP Reference Microservice folder:
+documents:
+
+  - title: "Service Users Guide - PM Stats Query Service"
+    folderId: 0b004cffcacd9cfe
+    file: "./build/eridoc/service-users-guide/Service_Users_Guide.pdf"
+    class-prefix: "1"
+    decimal-class: "1553"
+    individual-number: "APR 201 640"
+    strategy: latest
+    eri_document_type: "User Guide"
+    format: "pdf"
+    eri_audience: "Workgroup Members - Searchable"
+    eri_category: "Research & Development"
+    eri_conf_class: "Ericsson Internal"
+  - title: "Vulnerability Analysis Report - PM Stats Query Service VERSION"
+    folderId: 0b004cffcacd9cff
+    file: "./build/va-reports/Vulnerability_Report_2.0.md"
+    class-prefix: "1"
+    decimal-class: "1597"
+    individual-number: "APR 201 640"
+    eri_document_type: "Analysis"
+    strategy: ordinal
+    format: "md"
+    eri_audience: "Workgroup Members - Searchable"
+    eri_category: "Security"
+    eri_conf_class: "Ericsson Confidential"
+
+#  - title: "Software Vendor List - PM Stats Query Service"
+#    file: "./build/doc/html/software-vendor-list/Software_Vendor_List.html"
+#    decimal-class: "00651"
+#    class-prefix: "1"
+#    individual-number: "APR 201 640"
+#    eri_document_type: "List"
+#    lang: "en"
+#    format: "html"
+
+#  - title: "Troubleshooting Guide - PM Stats Query Service"
+#    file: "./build/doc/pdf/trouble-shooting-guide/Trouble_Shooting_Guide.pdf"
+#    decimal-class: "15451"
+#    class-prefix: "1"
+#    individual-number: "APR 201 640"
+#    eri_document_type: "Troubleshooting"
+#    lang: "en"
+#    format: "html"
+
+#  - title: "YANG Conversion - PM Stats Query Service"
+#    file: "./docs/target/generated-docs/yang-conversion/yang-conversion.html"
+#    decimal-class: "1551"
+#    class-prefix: "1"
+#    individual-number: "APR 201 640"
+#    eri_document_type: "Description"
+#    lang: "en"
+#    format: "html"
+#
+#  - title: "Characteristics Report - PM Stats Query Service"
+#    file: "./docs/target/generated-docs/characteristics_report/characteristics_report.pdf"
+#    strategy: "ordinal"
+#    decimal-class: "152 83"
+#    class-prefix: "2"
+#    individual-number: "APR 201 640"
+#    eri_document_type: "Test Report"
+#    lang: "en"
+#    format: "pdf"

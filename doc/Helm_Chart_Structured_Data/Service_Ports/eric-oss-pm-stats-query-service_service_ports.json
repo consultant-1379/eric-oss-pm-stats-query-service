@@ -1,0 +1,52 @@
+{
+  "metadata" : {
+    "serviceHelmChartName" : "eric-oss-pm-stats-query-service",
+    "usedSchemaVersion" : "1.0",
+    "fileVersion" : "1.0",
+    "dateEdited" : "2023-08-30"
+  },
+  "internalPorts": [
+    {
+     "serviceInterfaceName": "Readiness",
+     "protocol": "HTTP",
+     "ipAddressType": "OAM IP",
+     "port": {
+	   "helmParameter": "service.port"
+	 },
+     "transportProtocol": "TCP",
+     "ipVersion": ["IPv4", "IPv6"]
+    },
+    {
+     "serviceInterfaceName": "Liveness",
+     "protocol": "HTTP",
+     "ipAddressType": "OAM IP",
+     "port": {
+	   "helmParameter": "service.port"
+	 },
+     "transportProtocol": "TCP",
+     "ipVersion": ["IPv4", "IPv6"]
+    }
+  ],
+  "externalPorts": [
+	{
+     "serviceInterfaceName": "OData/Olingo REST API",
+     "protocol": "HTTP",
+     "ipAddressType": "OAM IP",
+     "port": {
+	   "helmParameter": "service.port"
+	 },
+     "transportProtocol": "TCP",
+     "ipVersion": ["IPv4", "IPv6"]
+    },
+    {
+     "serviceInterfaceName": "Actuator info/metrics",
+     "protocol": "HTTP",
+     "ipAddressType": "OAM IP",
+     "port": {
+	   "helmParameter": "service.port"
+	 },
+     "transportProtocol": "TCP",
+     "ipVersion": ["IPv4", "IPv6"]
+    }
+  ]
+}

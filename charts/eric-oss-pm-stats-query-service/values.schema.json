@@ -1,0 +1,1975 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema",
+  "$id": "urn:adp:helm:schemas:v1:DR-D1121-210:v1",
+  "title": "Root Schema",
+  "type": "object",
+  "default": {},
+  "required": [
+    "query",
+    "flyway",
+    "lifecycle",
+    "replicaCount",
+    "podDisruptionBudget",
+    "updateStrategy",
+    "labels",
+    "imageCredentials",
+    "imagePullSecrets",
+    "nameOverride",
+    "fullnameOverride",
+    "serviceAccount",
+    "podAnnotations",
+    "annotations",
+    "service",
+    "eric-pm-server",
+    "prometheus",
+    "terminationGracePeriodSeconds",
+    "resources",
+    "autoScaling",
+    "nodeSelector",
+    "topologySpreadConstraints",
+    "tolerations",
+    "affinity",
+    "probes",
+    "podPriority",
+    "appArmorProfile",
+    "seccompProfile",
+    "log",
+    "useInternalCA",
+    "osm2ism",
+    "podSecurityContext",
+    "securityPolicy",
+    "cnomServer",
+    "dst",
+    "retry"
+  ],
+  "properties": {
+    "query": {
+      "title": "The query Schema",
+      "type": "object",
+      "default": {},
+      "required": [
+        "database",
+        "kafka",
+        "credentials"
+      ],
+      "properties": {
+        "database": {
+          "title": "The database Schema",
+          "type": "object",
+          "default": {},
+          "required": [
+            "url",
+            "enabled"
+          ],
+          "properties": {
+            "url": {
+              "title": "The url Schema",
+              "type": "string",
+              "default": "jdbc:postgresql://eric-data-document-database-pg:5432/dynamic_schema",
+              "examples": [
+                "jdbc:postgresql://eric-data-document-database-pg:5432/dynamic_schema"
+              ]
+            },
+            "enabled": {
+              "title": "The enabled Schema",
+              "type": "boolean",
+              "default": false,
+              "examples": [
+                false
+              ]
+            }
+          },
+          "examples": [{
+            "url": "jdbc:postgresql://eric-data-document-database-pg:5432/dynamic_schema",
+            "enabled": false
+          }]
+        },
+        "kafka": {
+          "title": "The kafka Schema",
+          "type": "object",
+          "default": {},
+          "required": [
+            "url",
+            "enabled",
+            "brokerPortTls"
+          ],
+          "properties": {
+            "url": {
+              "title": "The url Schema",
+              "type": "string",
+              "default": "eric-data-message-bus-kf:9092",
+              "examples": [
+                "eric-data-message-bus-kf:9092"
+              ]
+            },
+            "enabled": {
+              "title": "The enabled Schema",
+              "type": "boolean",
+              "default": false,
+              "examples": [
+                false
+              ]
+            },
+            "brokerPortTls": {
+              "title": "The brokerPortTls Schema",
+              "type": "integer",
+              "default": 9093,
+              "minimum": 0,
+              "examples": [
+                9093
+              ]
+            }
+          },
+          "examples": [{
+            "url": "eric-data-message-bus-kf:9092",
+            "enabled": false,
+            "brokerPortTls": 9093
+          }]
+        },
+        "credentials": {
+          "title": "The credentials Schema",
+          "type": "object",
+          "default": {},
+          "required": [
+            "roUserName",
+            "kubernetesSecretName",
+            "keyForUserId",
+            "keyForUserPw",
+            "database"
+          ],
+          "properties": {
+            "roUserName": {
+              "title": "The roUserName Schema",
+              "type": "string",
+              "default": "kpi-service_user_ro",
+              "examples": [
+                "kpi_service_user_ro"
+              ]
+            },
+            "kubernetesSecretName": {
+              "title": "The kubernetesSecretName Schema",
+              "type": "string",
+              "default": "eric-oss-pm-stats-query-service-secret",
+              "examples": [
+                "eric-oss-pm-stats-query-service-secret"
+              ]
+            },
+            "keyForUserId": {
+              "title": "The keyForUserId Schema",
+              "type": "string",
+              "default": "username",
+              "examples": [
+                "username"
+              ]
+            },
+            "keyForUserPw": {
+              "title": "The keyForUserPw Schema",
+              "type": "string",
+              "default": "password",
+              "examples": [
+                "password"
+              ]
+            },
+            "database": {
+              "title": "The database Schema",
+              "type": "object",
+              "default": {},
+              "required": [
+                "username",
+                "password"
+              ],
+              "properties": {
+                "username": {
+                  "title": "The username Schema",
+                  "type": "string",
+                  "default": "postgres",
+                  "examples": [
+                    "postgres"
+                  ]
+                },
+                "password": {
+                  "title": "The password Schema",
+                  "type": "string",
+                  "default": "superpwd",
+                  "examples": [
+                    "superpwd"
+                  ]
+                }
+              },
+              "examples": [{
+                "username": "postgres",
+                "password": "superpwd"
+              }]
+            }
+          },
+          "examples": [{
+            "roUserName": "kpi_service_user_ro",
+            "kubernetesSecretName": "eric-oss-pm-stats-query-service-secret",
+            "keyForUserId": "username",
+            "keyForUserPw": "password",
+            "database": {
+              "username": "postgres",
+              "password": "superpwd"
+            }
+          }]
+        }
+      },
+      "examples": [{
+        "database": {
+          "url": "jdbc:postgresql://eric-data-document-database-pg:5432/dynamic_schema",
+          "enabled": false
+        },
+        "kafka": {
+          "url": "eric-data-message-bus-kf:9092",
+          "enabled": false,
+          "brokerPortTls": 9093
+        },
+        "credentials": {
+          "roUserName": "kpi_service_user_ro",
+          "kubernetesSecretName": "eric-oss-pm-stats-query-service-secret",
+          "keyForUserId": "username",
+          "keyForUserPw": "password",
+          "database": {
+            "username": "postgres",
+            "password": "superpwd"
+          }
+        }
+      }]
+    },
+    "flyway": {
+      "title": "The flyway Schema",
+      "type": "object",
+      "default": {},
+      "required": [
+        "enabled"
+      ],
+      "properties": {
+        "enabled": {
+          "title": "The enabled Schema",
+          "type": "boolean",
+          "default": false,
+          "examples": [
+            false
+          ]
+        }
+      },
+      "examples": [{
+        "enabled": false
+      }]
+    },
+    "lifecycle": {
+      "title": "The lifecycle Schema",
+      "type": "object",
+      "default": {},
+      "required": [
+        "preStop"
+      ],
+      "properties": {
+        "preStop": {
+          "title": "The preStop Schema",
+          "type": "object",
+          "default": {},
+          "required": [
+            "command"
+          ],
+          "properties": {
+            "command": {
+              "title": "The command Schema",
+              "type": "string",
+              "default": "['/bin/sh', '-c', 'echo PreStop works']",
+              "examples": [
+                "['/bin/sh', '-c', 'echo PreStop works']"
+              ]
+            }
+          },
+          "examples": [{
+            "command": "['/bin/sh', '-c', 'echo PreStop works']"
+          }]
+        }
+      },
+      "examples": [{
+        "preStop": {
+          "command": "['/bin/sh', '-c', 'echo PreStop works']"
+        }
+      }]
+    },
+    "replicaCount": {
+      "title": "The replicaCount Schema",
+      "type": "integer",
+      "default": 2,
+      "minimum": 0,
+      "examples": [
+        2
+      ]
+    },
+    "podDisruptionBudget": {
+      "title": "The podDisruptionBudget Schema",
+      "type": "object",
+      "default": {},
+      "required": [
+        "minAvailable"
+      ],
+      "properties": {
+        "minAvailable": {
+          "title": "The minAvailable Schema",
+          "type": ["string", "integer", "null"],
+          "default": 1,
+          "minimum": 0,
+          "pattern": "^([0-9]+%)?$",
+          "description": "If the type is string, then the following pattern must be followed: ^([0-9]+%)?$",
+          "examples": [
+            1
+          ]
+        },
+        "maxUnavailable": {
+          "title": "The maxUnavailable Schema",
+          "minimum": 0,
+          "type": ["string", "integer", "null"],
+          "pattern": "^([0-9]+%)?$",
+          "description": "If the type is string, then the following pattern must be followed: ^([0-9]+%)?$",
+          "default": "",
+          "examples": [
+            ""
+          ]
+        }
+      },
+      "examples": [{
+        "minAvailable": 1,
+        "maxUnavailable": ""
+      }]
+    },
+    "updateStrategy": {
+      "title": "The updateStrategy Schema",
+      "type": "object",
+      "default": {},
+      "required": [
+        "type",
+        "rollingUpdate"
+      ],
+      "properties": {
+        "type": {
+          "title": "The type Schema",
+          "type": "string",
+          "default": "RollingUpdate",
+          "enum": ["RollingUpdate", "Recreate"],
+          "examples": [
+            "RollingUpdate"
+          ]
+        },
+        "rollingUpdate": {
+          "title": "The rollingUpdate Schema",
+          "type": "object",
+          "default": {},
+          "required": [
+            "maxSurge",
+            "maxUnavailable"
+          ],
+          "properties": {
+            "maxSurge": {
+              "title": "The maxSurge Schema",
+              "type": "integer",
+              "default": 1,
+              "minimum": 1,
+              "examples": [
+                1
+              ]
+            },
+            "maxUnavailable": {
+              "title": "The maxUnavailable Schema",
+              "type": "integer",
+              "default": 0,
+              "minimum": 0,
+              "examples": [
+                0
+              ]
+            }
+          },
+          "examples": [{
+            "maxSurge": 1,
+            "maxUnavailable": 0
+          }]
+        }
+      },
+      "examples": [{
+        "type": "RollingUpdate",
+        "rollingUpdate": {
+          "maxSurge": 1,
+          "maxUnavailable": 0
+        }
+      }]
+    },
+    "labels": {
+      "title": "The labels Schema",
+      "type": "object",
+      "default": {},
+      "required": [],
+      "properties": {},
+      "examples": [{}]
+    },
+    "imageCredentials": {
+      "title": "The imageCredentials Schema",
+      "type": "object",
+      "default": {},
+      "required": [
+        "eric-oss-pm-stats-query-service"
+      ],
+      "properties": {
+        "eric-oss-pm-stats-query-service": {
+          "title": "The eric-oss-pm-stats-query-service Schema",
+          "type": "object",
+          "default": {},
+          "required": ["registry"],
+          "properties": {
+            "repoPath": {
+              "title": "The repoPath Schema",
+              "type": ["null", "string"],
+              "default": null,
+              "examples": [
+                null
+              ]
+            },
+            "registry": {
+              "title": "The registry Schema",
+              "type": "object",
+              "default": {},
+              "required": [],
+              "properties": {},
+              "examples": [{}]
+            }
+          },
+          "examples": [{
+            "repoPath": null,
+            "registry": {}
+          }]
+        }
+      },
+      "examples": [{
+        "eric-oss-pm-stats-query-service": {
+          "repoPath": null,
+          "registry": {}
+        }
+      }]
+    },
+    "imagePullSecrets": {
+      "title": "The imagePullSecrets Schema",
+      "type": "array",
+      "default": [],
+      "items": {},
+      "examples": [
+        []
+      ]
+    },
+    "nameOverride": {
+      "title": "The nameOverride Schema",
+      "type": "string",
+      "default": "",
+      "examples": [
+        ""
+      ]
+    },
+    "fullnameOverride": {
+      "title": "The fullnameOverride Schema",
+      "type": "string",
+      "default": "",
+      "examples": [
+        ""
+      ]
+    },
+    "serviceAccount": {
+      "title": "The serviceAccount Schema",
+      "type": "object",
+      "default": {},
+      "required": [
+        "create",
+        "name"
+      ],
+      "properties": {
+        "create": {
+          "title": "The create Schema",
+          "type": "boolean",
+          "default": true,
+          "examples": [
+            true
+          ]
+        },
+        "name": {
+          "title": "The name Schema",
+          "type": "string",
+          "default": "",
+          "examples": [
+            ""
+          ]
+        }
+      },
+      "examples": [{
+        "create": true,
+        "name": ""
+      }]
+    },
+    "podAnnotations": {
+      "title": "The podAnnotations Schema",
+      "type": "object",
+      "default": {},
+      "required": [],
+      "properties": {},
+      "examples": [{}]
+    },
+    "annotations": {
+      "title": "The annotations Schema",
+      "type": "object",
+      "default": {},
+      "required": [],
+      "properties": {},
+      "examples": [{}]
+    },
+    "service": {
+      "title": "The service Schema",
+      "type": "object",
+      "default": {},
+      "required": [
+        "type",
+        "port",
+        "endpoints"
+      ],
+      "properties": {
+        "type": {
+          "title": "The type Schema",
+          "type": "string",
+          "default": "ClusterIP",
+          "enum": ["ClusterIP", "NodePort", "LoadBalancer", "ExternalName"],
+          "examples": [
+            "ClusterIP"
+          ]
+        },
+        "port": {
+          "title": "The port Schema",
+          "type": "integer",
+          "default": 8080,
+          "minimum": 0,
+          "examples": [
+            8080
+          ]
+        },
+        "endpoints": {
+          "title": "The endpoints Schema",
+          "type": "object",
+          "default": {},
+          "required": [
+            "chassisapi"
+          ],
+          "properties": {
+            "chassisapi": {
+              "title": "The chassisapi Schema",
+              "type": "object",
+              "default": {},
+              "required": [
+                "tls"
+              ],
+              "properties": {
+                "tls": {
+                  "title": "The tls Schema",
+                  "type": "object",
+                  "default": {},
+                  "required": [
+                    "enforced",
+                    "verifyClientCertificate"
+                  ],
+                  "properties": {
+                    "enforced": {
+                      "title": "The enforced Schema",
+                      "type": "string",
+                      "default": "required",
+                      "examples": [
+                        "required"
+                      ]
+                    },
+                    "verifyClientCertificate": {
+                      "title": "The verifyClientCertificate Schema",
+                      "type": "string",
+                      "default": "required",
+                      "examples": [
+                        "required"
+                      ]
+                    }
+                  },
+                  "examples": [{
+                    "enforced": "required",
+                    "verifyClientCertificate": "required"
+                  }]
+                }
+              },
+              "examples": [{
+                "tls": {
+                  "enforced": "required",
+                  "verifyClientCertificate": "required"
+                }
+              }]
+            }
+          },
+          "examples": [{
+            "chassisapi": {
+              "tls": {
+                "enforced": "required",
+                "verifyClientCertificate": "required"
+              }
+            }
+          }]
+        }
+      },
+      "examples": [{
+        "type": "ClusterIP",
+        "port": 8080,
+        "endpoints": {
+          "chassisapi": {
+            "tls": {
+              "enforced": "required",
+              "verifyClientCertificate": "required"
+            }
+          }
+        }
+      }]
+    },
+    "eric-pm-server": {
+      "title": "The eric-pm-server Schema",
+      "type": "object",
+      "default": {},
+      "required": [
+        "rbac"
+      ],
+      "properties": {
+        "rbac": {
+          "title": "The rbac Schema",
+          "type": "object",
+          "default": {},
+          "required": [
+            "appMonitoring"
+          ],
+          "properties": {
+            "appMonitoring": {
+              "title": "The appMonitoring Schema",
+              "type": "object",
+              "default": {},
+              "required": [
+                "enabled"
+              ],
+              "properties": {
+                "enabled": {
+                  "title": "The enabled Schema",
+                  "type": "boolean",
+                  "default": true,
+                  "examples": [
+                    true
+                  ]
+                }
+              },
+              "examples": [{
+                "enabled": true
+              }]
+            }
+          },
+          "examples": [{
+            "appMonitoring": {
+              "enabled": true
+            }
+          }]
+        }
+      },
+      "examples": [{
+        "rbac": {
+          "appMonitoring": {
+            "enabled": true
+          }
+        }
+      }]
+    },
+    "prometheus": {
+      "title": "The prometheus Schema",
+      "type": "object",
+      "default": {},
+      "required": [
+        "path",
+        "scrape"
+      ],
+      "properties": {
+        "path": {
+          "title": "The path Schema",
+          "type": "string",
+          "default": "/actuator/prometheus",
+          "examples": [
+            "/actuator/prometheus"
+          ]
+        },
+        "scrape": {
+          "title": "The scrape Schema",
+          "type": "boolean",
+          "default": true,
+          "examples": [
+            true
+          ]
+        }
+      },
+      "examples": [{
+        "path": "/actuator/prometheus",
+        "scrape": true
+      }]
+    },
+    "terminationGracePeriodSeconds": {
+      "title": "The terminationGracePeriodSeconds Schema",
+      "type": "integer",
+      "default": 30,
+      "minimum": 0,
+      "examples": [
+        30
+      ]
+    },
+    "resources": {
+      "title": "The resources Schema",
+      "type": "object",
+      "default": {},
+      "required": [
+        "eric-oss-pm-stats-query-service"
+      ],
+      "properties": {
+        "eric-oss-pm-stats-query-service": {
+          "title": "The eric-oss-pm-stats-query-service Schema",
+          "type": "object",
+          "default": {},
+          "required": [
+            "requests",
+            "limits",
+            "jvm"
+          ],
+          "properties": {
+            "requests": {
+              "title": "The requests Schema",
+              "type": "object",
+              "default": {},
+              "required": [
+                "memory",
+                "cpu",
+                "ephemeral-storage"
+              ],
+              "properties": {
+                "memory": {
+                  "title": "The memory Schema",
+                  "type": ["string", "integer"],
+                  "default": "256Mi",
+                  "pattern": "^(?:\\d+(E|P|T|G|M|k|Ei|Pi|Ti|Gi|Mi|Ki)?)?$",
+                  "description": "The following pattern must be followed: ^(?:\\d+(E|P|T|G|M|k|Ei|Pi|Ti|Gi|Mi|Ki)?)?$",
+                  "examples": [
+                    "256Mi"
+                  ]
+                },
+                "cpu": {
+                  "title": "The cpu Schema",
+                  "type": ["string", "integer"],
+                  "default": "125m",
+                  "pattern": "^(?:\\d+\\.?\\d*m?)?$",
+                  "description": "The following pattern must be followed: ^(?:\\d+\\.?\\d*m?)?$",
+                  "examples": [
+                    "125m"
+                  ]
+                },
+                "ephemeral-storage": {
+                  "title": "The ephemeral-storage Schema",
+                  "type": ["string", "integer"],
+                  "pattern": "^(?:\\d+(E|P|T|G|M|k|Ei|Pi|Ti|Gi|Mi|Ki)?)?$",
+                  "description": "The following pattern must be followed: ^(?:\\d+(E|P|T|G|M|k|Ei|Pi|Ti|Gi|Mi|Ki)?)?$",
+                  "default": "",
+                  "examples": [
+                    ""
+                  ]
+                }
+              },
+              "examples": [{
+                "memory": "256Mi",
+                "cpu": "125m",
+                "ephemeral-storage": ""
+              }]
+            },
+            "limits": {
+              "title": "The limits Schema",
+              "type": "object",
+              "default": {},
+              "required": [
+                "memory",
+                "cpu",
+                "ephemeral-storage"
+              ],
+              "properties": {
+                "memory": {
+                  "title": "The memory Schema",
+                  "type": ["string", "integer"],
+                  "default": "2Gi",
+                  "pattern": "^(?:\\d+(E|P|T|G|M|k|Ei|Pi|Ti|Gi|Mi|Ki)?)?$",
+                  "description": "The following pattern must be followed: ^(?:\\d+(E|P|T|G|M|k|Ei|Pi|Ti|Gi|Mi|Ki)?)?$",
+                  "examples": [
+                    "2Gi"
+                  ]
+                },
+                "cpu": {
+                  "title": "The cpu Schema",
+                  "type": ["string", "integer"],
+                  "default": "500m",
+                  "pattern": "^(?:\\d+\\.?\\d*m?)?$",
+                  "description": "The following pattern must be followed: ^(?:\\d+\\.?\\d*m?)?$",
+                  "examples": [
+                    "500m"
+                  ]
+                },
+                "ephemeral-storage": {
+                  "title": "The ephemeral-storage Schema",
+                  "type": ["string", "integer"],
+                  "default": "",
+                  "pattern": "^(?:\\d+(E|P|T|G|M|k|Ei|Pi|Ti|Gi|Mi|Ki)?)?$",
+                  "description": "The following pattern must be followed: ^(?:\\d+(E|P|T|G|M|k|Ei|Pi|Ti|Gi|Mi|Ki)?)?$",
+                  "examples": [
+                    ""
+                  ]
+                }
+              },
+              "examples": [{
+                "memory": "2Gi",
+                "cpu": "500m",
+                "ephemeral-storage": ""
+              }]
+            },
+            "jvm": {
+              "title": "The jvm Schema",
+              "type": "object",
+              "default": {},
+              "required": [
+                "initialMemoryAllocationPercentage",
+                "smallMemoryAllocationMaxPercentage",
+                "largeMemoryAllocationMaxPercentage"
+              ],
+              "properties": {
+                "initialMemoryAllocationPercentage": {
+                  "type": "integer",
+                  "default": "50",
+                  "minimum": 0,
+                  "examples": [
+                    50
+                  ]
+                },
+                "smallMemoryAllocationMaxPercentage": {
+                  "type": "integer",
+                  "default": "70",
+                  "minimum": 0,
+                  "examples": [
+                    70
+                  ]
+                },
+                "largeMemoryAllocationMaxPercentage": {
+                  "type": "integer",
+                  "default": "75",
+                  "minimum": 0,
+                  "examples": [
+                    75
+                  ]
+                }
+              },
+              "examples": [{
+                "jvm": {
+                  "initialMemoryAllocationPercentage": 50,
+                  "smallMemoryAllocationMaxPercentage": 70,
+                  "largeMemoryAllocationMaxPercentage": 75
+                }
+              }]
+            }
+          },
+          "examples": [{
+            "requests": {
+              "memory": "256Mi",
+              "cpu": "125m",
+              "ephemeral-storage": ""
+            },
+            "limits": {
+              "memory": "2Gi",
+              "cpu": "500m",
+              "ephemeral-storage": ""
+            },
+            "jvm": {
+              "initialMemoryAllocationPercentage": 50,
+              "smallMemoryAllocationMaxPercentage": 70,
+              "largeMemoryAllocationMaxPercentage": 75
+            }
+          }]
+        }
+      },
+      "examples": [{
+        "eric-oss-pm-stats-query-service": {
+          "requests": {
+            "memory": "256Mi",
+            "cpu": "125m",
+            "ephemeral-storage": ""
+          },
+          "limits": {
+            "memory": "2Gi",
+            "cpu": "500m",
+            "ephemeral-storage": ""
+          },
+          "jvm": {
+            "initialMemoryAllocationPercentage": 50,
+            "smallMemoryAllocationMaxPercentage": 70,
+            "largeMemoryAllocationMaxPercentage": 75
+          }
+        }
+      }]
+    },
+    "autoScaling": {
+      "title": "The autoScaling Schema",
+      "type": "object",
+      "default": {},
+      "required": [
+        "enabled",
+        "minReplicas",
+        "maxReplicas",
+        "targetCPUUtilizationPercentage"
+      ],
+      "properties": {
+        "enabled": {
+          "title": "The enabled Schema",
+          "type": "boolean",
+          "default": false,
+          "examples": [
+            false
+          ]
+        },
+        "minReplicas": {
+          "title": "The minReplicas Schema",
+          "type": "integer",
+          "default": 1,
+          "minimum": 1,
+          "examples": [
+            1
+          ]
+        },
+        "maxReplicas": {
+          "title": "The maxReplicas Schema",
+          "type": "integer",
+          "default": 100,
+          "minimum": 1,
+          "examples": [
+            100
+          ]
+        },
+        "targetCPUUtilizationPercentage": {
+          "title": "The targetCPUUtilizationPercentage Schema",
+          "type": "integer",
+          "default": 80,
+          "minimum": 1,
+          "maximum": 100,
+          "examples": [
+            80
+          ]
+        }
+      },
+      "examples": [{
+        "enabled": false,
+        "minReplicas": 1,
+        "maxReplicas": 100,
+        "targetCPUUtilizationPercentage": 80
+      }]
+    },
+    "nodeSelector": {
+      "title": "The nodeSelector Schema",
+      "type": "object",
+      "default": {},
+      "required": [],
+      "properties": {},
+      "examples": [{}]
+    },
+    "topologySpreadConstraints": {
+      "title": "The topologySpreadConstraints Schema",
+      "type": "object",
+      "default": {},
+      "required": [
+        "deployment",
+        "test"
+      ],
+      "properties": {
+        "deployment": {
+          "title": "The deployment Schema",
+          "type": "array",
+          "default": [],
+          "items": {},
+          "examples": [
+            []
+          ]
+        },
+        "test": {
+          "title": "The test Schema",
+          "type": "array",
+          "default": [],
+          "items": {},
+          "examples": [
+            []
+          ]
+        }
+      },
+      "examples": [{
+        "deployment": [],
+        "test": []
+      }]
+    },
+    "tolerations": {
+      "title": "The tolerations Schema",
+      "type": "array",
+      "default": [],
+      "items": {
+        "title": "A Schema",
+        "type": "object",
+        "required": [],
+        "properties": {
+          "key": {
+            "title": "The key Schema",
+            "type": "string",
+            "examples": [
+              "node.kubernetes.io/not-ready",
+              "node.kubernetes.io/unreachable"
+            ]
+          },
+          "operator": {
+            "title": "The operator Schema",
+            "type": "string",
+            "enum": ["Exists", "Equal", "DoesNotExist", "NotEqual"],
+            "examples": [
+              "Exists"
+            ]
+          },
+          "effect": {
+            "title": "The effect Schema",
+            "type": "string",
+            "enum": ["NoSchedule", "PreferNoSchedule", "NoExecute"],
+            "examples": [
+              "NoExecute"
+            ]
+          },
+          "tolerationSeconds": {
+            "title": "The tolerationSeconds Schema",
+            "type": "integer",
+            "minimum": 0,
+            "examples": [
+              0
+            ]
+          }
+        },
+        "examples": [{
+          "key": "node.kubernetes.io/not-ready",
+          "operator": "Exists",
+          "effect": "NoExecute",
+          "tolerationSeconds": 0
+        },
+          {
+            "key": "node.kubernetes.io/unreachable",
+            "operator": "Exists",
+            "effect": "NoExecute",
+            "tolerationSeconds": 0
+          }]
+      },
+      "examples": [
+        [{
+          "key": "node.kubernetes.io/not-ready",
+          "operator": "Exists",
+          "effect": "NoExecute",
+          "tolerationSeconds": 0
+        },
+          {
+            "key": "node.kubernetes.io/unreachable",
+            "operator": "Exists",
+            "effect": "NoExecute",
+            "tolerationSeconds": 0
+          }]
+      ]
+    },
+    "affinity": {
+      "title": "The affinity Schema",
+      "type": "object",
+      "default": {},
+      "required": [
+        "podAntiAffinity",
+        "topologyKey"
+      ],
+      "properties": {
+        "podAntiAffinity": {
+          "title": "The podAntiAffinity Schema",
+          "type": "string",
+          "default": "soft",
+          "enum": ["soft", "hard"],
+          "examples": [
+            "soft"
+          ]
+        },
+        "topologyKey": {
+          "title": "The topologyKey Schema",
+          "type": "string",
+          "default": "kubernetes.io/hostname",
+          "examples": [
+            "kubernetes.io/hostname"
+          ]
+        }
+      },
+      "examples": [{
+        "podAntiAffinity": "soft",
+        "topologyKey": "kubernetes.io/hostname"
+      }]
+    },
+    "probes": {
+      "title": "The probes Schema",
+      "type": "object",
+      "default": {},
+      "required": [
+        "eric-oss-pm-stats-query-service"
+      ],
+      "properties": {
+        "eric-oss-pm-stats-query-service": {
+          "title": "The eric-oss-pm-stats-query-service Schema",
+          "type": "object",
+          "default": {},
+          "required": [
+            "livenessProbe",
+            "readinessProbe"
+          ],
+          "properties": {
+            "livenessProbe": {
+              "title": "The livenessProbe Schema",
+              "type": "object",
+              "default": {},
+              "required": [
+                "failureThreshold",
+                "initialDelaySeconds",
+                "periodSeconds",
+                "timeoutSeconds"
+              ],
+              "properties": {
+                "failureThreshold": {
+                  "title": "The failureThreshold Schema",
+                  "type": "integer",
+                  "default": 3,
+                  "minimum": 1,
+                  "examples": [
+                    3
+                  ]
+                },
+                "initialDelaySeconds": {
+                  "title": "The initialDelaySeconds Schema",
+                  "type": "integer",
+                  "default": 60,
+                  "minimum": 0,
+                  "examples": [
+                    60
+                  ]
+                },
+                "periodSeconds": {
+                  "title": "The periodSeconds Schema",
+                  "type": "integer",
+                  "default": 10,
+                  "minimum": 1,
+                  "examples": [
+                    10
+                  ]
+                },
+                "timeoutSeconds": {
+                  "title": "The timeoutSeconds Schema",
+                  "type": "integer",
+                  "default": 10,
+                  "minimum": 1,
+                  "examples": [
+                    10
+                  ]
+                }
+              },
+              "examples": [{
+                "failureThreshold": 3,
+                "initialDelaySeconds": 60,
+                "periodSeconds": 10,
+                "timeoutSeconds": 10
+              }]
+            },
+            "readinessProbe": {
+              "title": "The readinessProbe Schema",
+              "type": "object",
+              "default": {},
+              "required": [
+                "failureThreshold",
+                "successThreshold",
+                "initialDelaySeconds",
+                "periodSeconds",
+                "timeoutSeconds"
+              ],
+              "properties": {
+                "failureThreshold": {
+                  "title": "The failureThreshold Schema",
+                  "type": "integer",
+                  "default": 3,
+                  "minimum": 1,
+                  "examples": [
+                    3
+                  ]
+                },
+                "successThreshold": {
+                  "title": "The successThreshold Schema",
+                  "type": "integer",
+                  "default": 1,
+                  "minimum": 1,
+                  "examples": [
+                    1
+                  ]
+                },
+                "initialDelaySeconds": {
+                  "title": "The initialDelaySeconds Schema",
+                  "type": "integer",
+                  "default": 60,
+                  "minimum": 0,
+                  "examples": [
+                    60
+                  ]
+                },
+                "periodSeconds": {
+                  "title": "The periodSeconds Schema",
+                  "type": "integer",
+                  "default": 10,
+                  "minimum": 1,
+                  "examples": [
+                    10
+                  ]
+                },
+                "timeoutSeconds": {
+                  "title": "The timeoutSeconds Schema",
+                  "type": "integer",
+                  "default": 10,
+                  "minimum": 1,
+                  "examples": [
+                    10
+                  ]
+                }
+              },
+              "examples": [{
+                "failureThreshold": 3,
+                "successThreshold": 1,
+                "initialDelaySeconds": 60,
+                "periodSeconds": 10,
+                "timeoutSeconds": 10
+              }]
+            }
+          },
+          "examples": [{
+            "livenessProbe": {
+              "failureThreshold": 3,
+              "initialDelaySeconds": 60,
+              "periodSeconds": 10,
+              "timeoutSeconds": 10
+            },
+            "readinessProbe": {
+              "failureThreshold": 3,
+              "successThreshold": 1,
+              "initialDelaySeconds": 60,
+              "periodSeconds": 10,
+              "timeoutSeconds": 10
+            }
+          }]
+        }
+      },
+      "examples": [{
+        "eric-oss-pm-stats-query-service": {
+          "livenessProbe": {
+            "failureThreshold": 3,
+            "initialDelaySeconds": 60,
+            "periodSeconds": 10,
+            "timeoutSeconds": 10
+          },
+          "readinessProbe": {
+            "failureThreshold": 3,
+            "successThreshold": 1,
+            "initialDelaySeconds": 60,
+            "periodSeconds": 10,
+            "timeoutSeconds": 10
+          }
+        }
+      }]
+    },
+    "podPriority": {
+      "title": "The podPriority Schema",
+      "type": "object",
+      "default": {},
+      "required": [
+        "eric-oss-pm-stats-query-service"
+      ],
+      "properties": {
+        "eric-oss-pm-stats-query-service": {
+          "title": "The eric-oss-pm-stats-query-service Schema",
+          "type": "object",
+          "default": {},
+          "required": [
+            "priorityClassName"
+          ],
+          "properties": {
+            "priorityClassName": {
+              "title": "The priorityClassName Schema",
+              "type": "string",
+              "default": "",
+              "examples": [
+                ""
+              ]
+            }
+          },
+          "examples": [{
+            "priorityClassName": ""
+          }]
+        }
+      },
+      "examples": [{
+        "eric-oss-pm-stats-query-service": {
+          "priorityClassName": ""
+        }
+      }]
+    },
+    "appArmorProfile": {
+      "title": "The appArmorProfile Schema",
+      "type": "object",
+      "default": {},
+      "required": [
+        "type"
+      ],
+      "properties": {
+        "type": {
+          "title": "The type Schema",
+          "type": "string",
+          "default": "",
+          "enum": ["", "unconfined", "runtime/default", "localhost"],
+          "examples": [
+            ""
+          ]
+        }
+      },
+      "examples": [{
+        "type": ""
+      }]
+    },
+    "seccompProfile": {
+      "title": "The seccompProfile Schema",
+      "type": "object",
+      "default": {},
+      "required": [
+        "type"
+      ],
+      "properties": {
+        "type": {
+          "title": "The type Schema",
+          "type": "string",
+          "default": "",
+          "enum": ["" ,"Unconfined", "RuntimeDefault", "Localhost"],
+          "examples": [
+            "RuntimeDefault"
+          ]
+        }
+      },
+      "examples": [{
+        "type": "RuntimeDefault"
+      }]
+    },
+    "log": {
+      "title": "The log Schema",
+      "type": "object",
+      "default": {},
+      "required": ["logLevel", "logControlFile", "logstash_port", "logstash_port_tls"],
+      "properties": {
+        "streamingMethod": {
+          "title": "The streamingMethod Schema",
+          "type": ["null", "string"],
+          "enum" : [null, "indirect", "direct", "dual"],
+          "default": null,
+          "examples": [
+            null
+          ]
+        },
+        "logLevel": {
+          "title": "The logLevel Schema",
+          "type": "string",
+          "default": "INFO",
+          "enum": ["ERROR", "INFO", "WARN", "DEBUG"],
+          "examples": [
+            "INFO"
+          ]
+        },
+        "logControlFile": {
+          "title": "The logControlFile Schema",
+          "type": "string",
+          "default": "/logcontrol/logcontrol.json",
+          "examples": [
+            "/logcontrol/logcontrol.json"
+          ]
+        },
+        "logstash_port": {
+          "title": "The logstash_port Schema",
+          "type": "integer",
+          "minimum": 0,
+          "default": 9080,
+          "examples": [
+            9080
+          ]
+        },
+        "logstash_port_tls": {
+          "title": "The logstash_port_tls Schema",
+          "type": "integer",
+          "minimum": 0,
+          "default": 9443,
+          "examples": [
+            9443
+          ]
+        }
+      },
+      "examples": [{
+        "streamingMethod": null,
+        "logLevel": "INFO",
+        "logControlFile": "/logcontrol/logcontrol.json",
+        "logstash_port": 9080,
+        "logstash_port_tls": 9443
+      }]
+    },
+    "useInternalCA": {
+      "title": "The useInternalCA Schema",
+      "type": "boolean",
+      "default": true,
+      "examples": [
+        true
+      ]
+    },
+    "osm2ism": {
+      "title": "The osm2ism Schema",
+      "type": "object",
+      "default": {},
+      "required": [
+        "enabled",
+        "outMeshServices"
+      ],
+      "properties": {
+        "enabled": {
+          "title": "The enabled Schema",
+          "type": "boolean",
+          "default": false,
+          "examples": [
+            false
+          ]
+        },
+        "outMeshServices": {
+          "title": "The outMeshServices Schema",
+          "type": "object",
+          "default": {},
+          "required": [
+            "cnom"
+          ],
+          "properties": {
+            "cnom": {
+              "title": "The cnom Schema",
+              "type": "object",
+              "default": {},
+              "required": [
+                "enabled",
+                "name",
+                "intermediateCA"
+              ],
+              "properties": {
+                "enabled": {
+                  "title": "The enabled Schema",
+                  "type": "boolean",
+                  "default": false,
+                  "examples": [
+                    false
+                  ]
+                },
+                "name": {
+                  "title": "The name Schema",
+                  "type": "string",
+                  "default": "",
+                  "examples": [
+                    ""
+                  ]
+                },
+                "intermediateCA": {
+                  "title": "The intermediateCA Schema",
+                  "type": "object",
+                  "default": {},
+                  "required": [
+                    "enabled",
+                    "name"
+                  ],
+                  "properties": {
+                    "enabled": {
+                      "title": "The enabled Schema",
+                      "type": "boolean",
+                      "default": false,
+                      "examples": [
+                        false
+                      ]
+                    },
+                    "name": {
+                      "title": "The name Schema",
+                      "type": "string",
+                      "default": "",
+                      "examples": [
+                        ""
+                      ]
+                    }
+                  },
+                  "examples": [{
+                    "enabled": false,
+                    "name": ""
+                  }]
+                }
+              },
+              "examples": [{
+                "enabled": false,
+                "name": "",
+                "intermediateCA": {
+                  "enabled": false,
+                  "name": ""
+                }
+              }]
+            }
+          },
+          "examples": [{
+            "cnom": {
+              "enabled": false,
+              "name": "",
+              "intermediateCA": {
+                "enabled": false,
+                "name": ""
+              }
+            }
+          }]
+        }
+      },
+      "examples": [{
+        "osm2ism": {
+          "enabled": false,
+          "outMeshServices": {
+            "cnom": {
+              "enabled": false,
+              "name": "",
+              "intermediateCA": {
+                "enabled": false,
+                "name": ""
+              }
+            }
+          }
+        }
+      }]
+    },
+    "podSecurityContext": {
+      "title": "The podSecurityContext Schema",
+      "type": "object",
+      "default": {},
+      "required": [],
+      "properties": {
+        "supplementalGroups": {
+          "title": "The supplementalGroups Schema",
+          "type": ["null", "array"],
+          "items": {
+            "type": "integer"
+          },
+          "default": null,
+          "examples": [
+            null
+          ]
+        }
+      },
+      "examples": [{
+        "supplementalGroups": null
+      }]
+    },
+    "securityPolicy": {
+      "title": "The securityPolicy Schema",
+      "type": "object",
+      "default": {},
+      "required": [
+        "rolename"
+      ],
+      "properties": {
+        "rolename": {
+          "title": "The rolename Schema",
+          "type": "string",
+          "default": "eric-oss-pm-stats-query-service",
+          "examples": [
+            "eric-oss-pm-stats-query-service"
+          ]
+        }
+      },
+      "examples": [{
+        "rolename": "eric-oss-pm-stats-query-service"
+      }]
+    },
+    "dst": {
+      "title": "The dst Schema",
+      "type": "object",
+      "default": {},
+      "required": [
+        "enabled",
+        "collector",
+        "producer"
+      ],
+      "properties": {
+        "enabled": {
+          "title": "The enabled Schema",
+          "type": "boolean",
+          "default": true,
+          "examples": [
+            true
+          ]
+        },
+        "collector": {
+          "title": "The collector Schema",
+          "type": "object",
+          "default": {},
+          "required": [
+            "host",
+            "protocol",
+            "portOtlpGrpc",
+            "portOtlpHttp",
+            "portJaegerGrpc"
+          ],
+          "properties": {
+            "host": {
+              "title": "The host Schema",
+              "type": "string",
+              "default": "http://eric-dst-collector",
+              "examples": [
+                "http://eric-dst-collector"
+              ]
+            },
+            "protocol": {
+              "title": "The protocol Schema",
+              "type": "string",
+              "default": "http",
+              "enum": ["http", "grpc"],
+              "examples": [
+                "http"
+              ]
+            },
+            "portOtlpGrpc": {
+              "title": "The portOtlpGrpc Schema",
+              "type": "integer",
+              "default": 4317,
+              "examples": [
+                4317
+              ]
+            },
+            "portOtlpHttp": {
+              "title": "The portOtlpHttp Schema",
+              "type": "integer",
+              "default": 4318,
+              "examples": [
+                4318
+              ]
+            },
+            "portJaegerGrpc": {
+              "title": "The portJaegerGrpc Schema",
+              "type": "integer",
+              "default": 14250,
+              "examples": [
+                14250
+              ]
+            }
+          },
+          "examples": [
+            {
+              "host": "http://eric-dst-collector",
+              "protocol": "http",
+              "portOtlpGrpc": 4317,
+              "portOtlpHttp": 4318,
+              "portJaegerGrpc": 14250
+            }
+          ]
+        },
+        "producer": {
+          "title": "The producer Schema",
+          "type": "object",
+          "default": {},
+          "required": [
+            "type"
+          ],
+          "properties": {
+            "type": {
+              "title": "The type Schema",
+              "type": "string",
+              "default": "B3",
+              "enum": ["B3", "W3C", "B3,W3C"],
+              "examples": [
+                "B3"
+              ]
+            }
+          },
+          "examples": [{
+            "type": "B3"
+          }]
+        }
+      },
+      "examples": [{
+        "enabled": true,
+        "collector": {
+          "host": "http://eric-dst-collector",
+          "protocol": "http",
+          "portOtlpGrpc": 4317,
+          "portOtlpHttp": 4318,
+          "portJaegerGrpc": 14250
+        },
+        "producer": {
+          "type": "B3"
+        }
+      }]
+    },
+    "retry": {
+      "title": "The retry Schema",
+      "type": "object",
+      "default": {},
+      "required": [
+        "postgres"
+      ],
+      "properties": {
+        "postgres": {
+          "title": "The postgres Schema",
+          "type": "object",
+          "default": {},
+          "required": [
+            "backoffPeriod",
+            "maxAttempts"
+          ],
+          "properties": {
+            "backoffPeriod": {
+              "title": "The backoffPeriod Schema",
+              "type": "integer",
+              "default": 5000,
+              "minimum": 0,
+              "examples": [
+                5000
+              ]
+            },
+            "maxAttempts": {
+              "title": "The maxAttempts Schema",
+              "type": "integer",
+              "default": 5,
+              "minimum": 1,
+              "examples": [
+                5
+              ]
+            }
+          },
+          "examples": [{
+            "backoffPeriod": 5000,
+            "maxAttempts": 5
+          }]
+        }
+      },
+      "examples": [{
+        "postgres": {
+          "backoffPeriod": 5000,
+          "maxAttempts": 5
+        }
+      }]
+    }
+  },
+  "examples": [{
+    "query": {
+      "database": {
+        "url": "jdbc:postgresql://eric-data-document-database-pg:5432/dynamic_schema",
+        "enabled": false
+      },
+      "kafka": {
+        "url": "eric-data-message-bus-kf:9092",
+        "enabled": false,
+        "brokerPortTls": 9093
+      },
+      "credentials": {
+        "roUserName": "kpi_service_user_ro",
+        "kubernetesSecretName": "eric-oss-pm-stats-query-service-secret",
+        "keyForUserId": "username",
+        "keyForUserPw": "password",
+        "database": {
+          "username": "postgres",
+          "password": "superpwd"
+        }
+      }
+    },
+    "flyway": {
+      "enabled": false
+    },
+    "lifecycle": {
+      "preStop": {
+        "command": "['/bin/sh', '-c', 'echo PreStop works']"
+      }
+    },
+    "replicaCount": 2,
+    "podDisruptionBudget": {
+      "minAvailable": 1,
+      "maxUnavailable": ""
+    },
+    "updateStrategy": {
+      "type": "RollingUpdate",
+      "rollingUpdate": {
+        "maxSurge": 1,
+        "maxUnavailable": 0
+      }
+    },
+    "labels": {},
+    "imageCredentials": {
+      "eric-oss-pm-stats-query-service": {
+        "repoPath": null,
+        "registry": {}
+      }
+    },
+    "imagePullSecrets": [],
+    "nameOverride": "",
+    "fullnameOverride": "",
+    "serviceAccount": {
+      "create": true,
+      "name": ""
+    },
+    "podAnnotations": {},
+    "annotations": {},
+    "service": {
+      "type": "ClusterIP",
+      "port": 8080,
+      "endpoints": {
+        "chassisapi": {
+          "tls": {
+            "enforced": "required",
+            "verifyClientCertificate": "required"
+          }
+        }
+      }
+    },
+    "eric-pm-server": {
+      "rbac": {
+        "appMonitoring": {
+          "enabled": true
+        }
+      }
+    },
+    "prometheus": {
+      "path": "/actuator/prometheus",
+      "scrape": true
+    },
+    "terminationGracePeriodSeconds": 30,
+    "resources": {
+      "eric-oss-pm-stats-query-service": {
+        "requests": {
+          "memory": "256Mi",
+          "cpu": "125m",
+          "ephemeral-storage": ""
+        },
+        "limits": {
+          "memory": "2Gi",
+          "cpu": "500m",
+          "ephemeral-storage": ""
+        },
+        "jvm": {
+          "initialMemoryAllocationPercentage": 50,
+          "smallMemoryAllocationMaxPercentage": 70,
+          "largeMemoryAllocationMaxPercentage": 75
+        }
+      }
+    },
+    "autoScaling": {
+      "enabled": false,
+      "minReplicas": 1,
+      "maxReplicas": 100,
+      "targetCPUUtilizationPercentage": 80
+    },
+    "nodeSelector": {},
+    "topologySpreadConstraints": {
+      "deployment": [],
+      "test": []
+    },
+    "tolerations": [{
+      "key": "node.kubernetes.io/not-ready",
+      "operator": "Exists",
+      "effect": "NoExecute",
+      "tolerationSeconds": 0
+    },
+      {
+        "key": "node.kubernetes.io/unreachable",
+        "operator": "Exists",
+        "effect": "NoExecute",
+        "tolerationSeconds": 0
+      }],
+    "affinity": {
+      "podAntiAffinity": "soft",
+      "topologyKey": "kubernetes.io/hostname"
+    },
+    "probes": {
+      "eric-oss-pm-stats-query-service": {
+        "livenessProbe": {
+          "failureThreshold": 3,
+          "initialDelaySeconds": 60,
+          "periodSeconds": 10,
+          "timeoutSeconds": 10
+        },
+        "readinessProbe": {
+          "failureThreshold": 3,
+          "successThreshold": 1,
+          "initialDelaySeconds": 60,
+          "periodSeconds": 10,
+          "timeoutSeconds": 10
+        }
+      }
+    },
+    "podPriority": {
+      "eric-oss-pm-stats-query-service": {
+        "priorityClassName": ""
+      }
+    },
+    "appArmorProfile": {
+      "type": ""
+    },
+    "seccompProfile": {
+      "type": "RuntimeDefault"
+    },
+    "log": {
+      "streamingMethod": null,
+      "logLevel": "INFO",
+      "logControlFile": "/logcontrol/logcontrol.json",
+      "logstash_port": 9080,
+      "logstash_port_tls": 9443
+    },
+    "useInternalCA": true,
+    "osm2ism": {
+      "enabled": false,
+      "outMeshServices": {
+        "cnom": {
+          "enabled": false,
+          "name": "",
+          "intermediateCA": {
+            "enabled": false,
+            "name": ""
+          }
+        }
+      }
+    },
+    "podSecurityContext": {
+      "supplementalGroups": null
+    },
+    "securityPolicy": {
+      "rolename": "eric-oss-pm-stats-query-service"
+    },
+    "dst": {
+      "enabled": true,
+      "collector": {
+        "host": "http://eric-dst-collector",
+        "protocol": "http",
+        "portOtlpGrpc": 4317,
+        "portOtlpHttp": 4318,
+        "portJaegerGrpc": 14250
+      },
+      "producer": {
+        "type": "B3"
+      }
+    },
+    "retry": {
+      "postgres": {
+        "backoffPeriod": 5000,
+        "maxAttempts": 5
+      }
+    }
+  }]
+}

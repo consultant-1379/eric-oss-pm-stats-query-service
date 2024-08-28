@@ -1,0 +1,47 @@
+{{- $serviceMesh := include "eric-oss-pm-stats-query-service.service-mesh-enabled" . | trim -}}
+{{- $tls := include "eric-oss-pm-stats-query-service.global-security-tls-enabled" . | trim -}}
+{{- $osm2ism := include "eric-oss-pm-stats-query-service.osm2ism-enabled" . | trim -}}
+{{- $osmServiceCNOM := include "eric-oss-pm-stats-query-service.osmService-cnom-enabled" . | trim -}}
+{{- $intermediateCA := include "eric-oss-pm-stats-query-service.osmService-cnom-issuerRef-enabled" . | trim -}}
+{{- if and (eq $serviceMesh "true") (eq $tls "true") (eq $osm2ism "true") (eq $osmServiceCNOM "true")}}
+
+#
+# COPYRIGHT Ericsson 2024
+#
+#
+#
+# The copyright to the computer program(s) herein is the property of
+#
+# Ericsson Inc. The programs may be used and/or copied only with written
+#
+# permission from Ericsson Inc. or in accordance with the terms and
+#
+# conditions stipulated in the agreement/contract under which the
+#
+# program(s) have been supplied.
+#
+
+apiVersion: siptls.sec.ericsson.com/v1
+kind: InternalCertificate
+metadata:
+  name: {{ include "eric-oss-pm-stats-query-service.name" . }}-{{ include "eric-oss-pm-stats-query-service.osmService-cnom-name" . }}-int-cert
+  labels:
+  {{- include "eric-oss-pm-stats-query-service.labels" . | nindent 4 }}
+  annotations:
+  {{- include "eric-oss-pm-stats-query-service.annotations" . | nindent 4 }}
+spec:
+  kubernetes:
+    generatedSecretName: {{ include "eric-oss-pm-stats-query-service.name" . }}-{{ include "eric-oss-pm-stats-query-service.osmService-cnom-name" . }}-secret
+    certificateName: "cert.pem"
+    privateKeyName: "key.pem"
+  certificate:
+    subject:
+      cn: {{ include "eric-oss-pm-stats-query-service.name" . }}
+    {{- if (eq $intermediateCA "true") }}
+    issuer:
+      reference: {{ include "eric-oss-pm-stats-query-service.osmService-cnom-issuerRef" . }}
+    {{- end }}
+    extendedKeyUsage:
+      tlsClientAuth: true
+      tlsServerAuth: true
+{{- end }}

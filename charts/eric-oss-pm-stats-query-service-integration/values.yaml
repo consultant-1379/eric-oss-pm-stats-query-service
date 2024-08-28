@@ -1,0 +1,60 @@
+#
+# COPYRIGHT Ericsson 2021
+#
+#
+#
+# The copyright to the computer program(s) herein is the property of
+#
+# Ericsson Inc. The programs may be used and/or copied only with written
+#
+# permission from Ericsson Inc. or in accordance with the terms and
+#
+# conditions stipulated in the agreement/contract under which the
+#
+# program(s) have been supplied.
+#
+
+eric-data-document-database-pg:
+  podPriority:
+    postgres:
+      priorityClassName: ""
+  replicaCount: 1
+  global:
+    security:
+      tls:
+        enabled: false
+  postgresDatabase: dynamic_schema
+  credentials:
+    kubernetesSecretName: datasource-secret
+    keyForUserId: custom-user
+    keyForUserPw: custom-pwd
+    keyForSuperPw: super-pwd
+    keyForMetricsPw: metrics-pwd
+    keyForReplicaId: replica-user
+    keyForReplicaPw: replica-pwd
+
+eric-data-coordinator-zk:
+  podPriority:
+    eric-data-coordinator-zk:
+      priorityClassName: ""
+  replicaCount: 1
+  global:
+    security:
+      tls:
+        enabled: false
+  persistence:
+    persistentVolumeClaim:
+      enabled: false
+
+eric-data-message-bus-kf:
+  podPriority:
+    eric-data-messagebus-kf:
+      priorityClassName: ""
+  replicaCount: 3
+  global:
+    security:
+      tls:
+        enabled: false
+  persistence:
+    persistentVolumeClaim:
+      enabled: false

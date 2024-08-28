@@ -1,0 +1,34 @@
+{{- $tls := include "eric-oss-pm-stats-query-service.global-security-tls-enabled" . | trim -}}
+{{- if and (eq $tls "true") .Values.useInternalCA (.Capabilities.APIVersions.Has "siptls.sec.ericsson.com/v1/InternalUserCA") }}
+
+#
+# COPYRIGHT Ericsson 2024
+#
+#
+#
+# The copyright to the computer program(s) herein is the property of
+#
+# Ericsson Inc. The programs may be used and/or copied only with written
+#
+# permission from Ericsson Inc. or in accordance with the terms and
+#
+# conditions stipulated in the agreement/contract under which the
+#
+# program(s) have been supplied.
+#
+
+apiVersion: siptls.sec.ericsson.com/v1
+kind: InternalUserCA
+metadata:
+  name: {{ include "eric-oss-pm-stats-query-service.fullname" . }}-ca
+  labels:
+    {{- include "eric-oss-pm-stats-query-service.labels" . | nindent 4 }}
+  annotations:
+    {{- include "eric-oss-pm-stats-query-service.annotations" . | nindent 4 }}
+spec:
+  kubernetes:
+    generatedSecretName: {{ include "eric-oss-pm-stats-query-service.fullname" . }}-ca-secret
+  certificate:
+    subject:
+      cn: {{ include "eric-oss-pm-stats-query-service.fullname" . }}-ca
+{{- end }}

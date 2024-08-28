@@ -1,0 +1,111 @@
+{{- $serviceMesh := include "eric-oss-pm-stats-query-service.service-mesh-enabled" . | trim -}}
+{{- $tls := include "eric-oss-pm-stats-query-service.global-security-tls-enabled" . | trim -}}
+{{- if and (eq $serviceMesh "true") (eq $tls "true") -}}
+
+#
+# COPYRIGHT Ericsson 2023
+#
+#
+#
+# The copyright to the computer program(s) herein is the property of
+#
+# Ericsson Inc. The programs may be used and/or copied only with written
+#
+# permission from Ericsson Inc. or in accordance with the terms and
+#
+# conditions stipulated in the agreement/contract under which the
+#
+# program(s) have been supplied.
+#
+
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaUser
+metadata:
+  name: {{ include "eric-oss-pm-stats-query-service.name" . }}
+  labels:
+    strimzi.io/cluster: eric-oss-dmm-kf-op-sz
+    {{- include "eric-oss-pm-stats-query-service.labels" . | nindent 4 }}
+  annotations:
+    {{- include "eric-oss-pm-stats-query-service.annotations" . | nindent 4 }}
+spec:
+  authentication:
+    type: tls-external
+  authorization:
+    type: simple
+    acls:
+      - resource:
+          type: topic
+          name: '*'
+          patternType: literal
+        operation: Write
+      - resource:
+          type: topic
+          name: '*'
+          patternType: literal
+        operation: Describe
+      - resource:
+          type: topic
+          name: '*'
+          patternType: literal
+        operation: Create
+      - resource:
+          type: topic
+          name: '*'
+          patternType: literal
+        operation: Alter
+      - resource:
+          type: topic
+          name: '*'
+          patternType: literal
+        operation: Read
+      - resource:
+          type: group
+          name: '*'
+          patternType: literal
+        operation: Write
+      - resource:
+          type: group
+          name: '*'
+          patternType: literal
+        operation: Describe
+      - resource:
+          type: group
+          name: '*'
+          patternType: literal
+        operation: Create
+      - resource:
+          type: group
+          name: '*'
+          patternType: literal
+        operation: Alter
+      - resource:
+          type: group
+          name: '*'
+          patternType: literal
+        operation: Read
+      - resource:
+          type: transactionalId
+          name: '*'
+          patternType: literal
+        operation: Write
+      - resource:
+          type: transactionalId
+          name: '*'
+          patternType: literal
+        operation: Describe
+      - resource:
+          type: transactionalId
+          name: '*'
+          patternType: literal
+        operation: Create
+      - resource:
+          type: transactionalId
+          name: '*'
+          patternType: literal
+        operation: Alter
+      - resource:
+          type: transactionalId
+          name: '*'
+          patternType: literal
+        operation: Read
+{{- end }}

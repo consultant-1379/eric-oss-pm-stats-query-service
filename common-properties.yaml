@@ -1,0 +1,67 @@
+#
+# COPYRIGHT Ericsson 2024
+#
+#
+#
+# The copyright to the computer program(s) herein is the property of
+#
+# Ericsson Inc. The programs may be used and/or copied only with written
+#
+# permission from Ericsson Inc. or in accordance with the terms and
+#
+# conditions stipulated in the agreement/contract under which the
+#
+# program(s) have been supplied.
+#
+
+modelVersion: 2.0
+
+properties:
+    # Microservice artifactID
+  - project-artifact-id: eric-oss-pm-stats-query-service
+    # Microservice helm chart name
+  - helm-chart-name: eric-oss-pm-stats-query-service
+    # Microservice docker image name
+  - docker-image-name: eric-oss-pm-stats-query-service
+    # Image product number
+  - image-product-number: "CXU1011310"
+    # Configuration file for EriDoc documents
+  - eridoc-config: "config/eridoc_config.yaml"
+    # Eridoc folder ID for Product Revision Information (PRI)
+  - eridoc-pri-folder-id: 0b004cffcacd9cfe
+    # Product extended name in JIRA
+  - jira-component-name: "PM Stats Query Service"
+    # Gerrit repository URL
+  - gerrit-url: "https://gerrit-gamma.gic.ericsson.se/plugins/gitiles/OSS/com.ericsson.oss.air/eric-oss-pm-stats-query-service/"
+    # Gerrit repository name
+  - gerrit-repo-name: OSS/com.ericsson.oss.air/eric-oss-pm-stats-query-service
+    # gitCA repo name
+  - gitca-repo-name: oss-eric-oss-pm-stats-query-service
+    # ACA repo name
+  - aca-container-name: eiap-app-dom-spec
+    # CAV product number
+  - src-doc-cav-product-number: "CAV1010231"
+    # Image product CXC/CXU number
+  - image-product-number: "CXU1011310"
+    # APR product number
+  - apr-product-number: "APR201640"
+    # FOSSA team name
+  - fossa-team-name: "eric-oss-kodiak"
+    # cbos image repo path
+  - cbos-image-repo: "armdocker.rnd.ericsson.se/proj-ldc/common_base_os_release"
+    # cbos name
+  - cbos-image-name: "sles"
+    # cbos version
+  - cbos-image-version: "6.17.0-11"
+    # Directory where dependencies.yaml is generated or updated
+  - ci-artifacts-directory: generated/dependencies
+    # Directory where dependencies-3pp.yaml and dependencies-metadata.yaml are stored
+  - dependencies-files-folder: config/dependencies
+    # eridoc doc to pdf
+  - eridoc-doc-to-pdf: config/handler-pdf-config.yaml
+    # eridoc stylesheet
+  - eridoc-stylesheet: doc/stylesheet/stylesheet.css
+    # eridoc config pcr
+  - eridoc-config: config/eridoc_config.yaml
+    # Open API spec
+  - open_api_spec_directory: src/main/resources/v1

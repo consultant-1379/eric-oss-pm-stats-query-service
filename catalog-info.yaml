@@ -1,0 +1,66 @@
+#
+# COPYRIGHT Ericsson 2024
+#
+#
+#
+# The copyright to the computer program(s) herein is the property of
+#
+# Ericsson Inc. The programs may be used and/or copied only with written
+#
+# permission from Ericsson Inc. or in accordance with the terms and
+#
+# conditions stipulated in the agreement/contract under which the
+#
+# program(s) have been supplied.
+#
+
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: eric-oss-pm-stats-query
+  title: PM Stats Query Service
+  description: The PM Stats Query Service exposes data from a PostgreSQL database via OData (V4) queries. This service provides a REST API interface for rApps with multiple DB schema handling.
+  annotations:
+    backstage.io/source-location: url:https://gerrit-gamma.gic.ericsson.se/plugins/gitiles/OSS/com.ericsson.oss.air/eric-oss-pm-stats-query-service
+    backstage.io/techdocs-ref: dir:.
+    backstage.io/kubernetes-label-selector: 'app.kubernetes.io/name=eric-oss-pm-stats-query-service'
+    jira.com/project-keys: IDUN
+    jira.com/filter-ids: "224364"
+    gerrit/component: OSS/com.ericsson.oss.air/eric-oss-pm-stats-query-service
+    sonarqube.org/project-key: com.ericsson.oss.air:eric-oss-pm-stats-query-service
+    jenkins:
+      fem6s11-eiffel216.eiffel.gic.ericsson.se:8443/eric-oss-pm-stats-query-service_PreCodeReview_Hybrid,
+      fem6s11-eiffel216.eiffel.gic.ericsson.se:8443/eric-oss-pm-stats-query-service_Publish_Hybrid
+    spinnaker.io/application-name: pmh-e2e-cicd
+    spinnaker.io/pipelines: eric-oss-pm-stats-query-service-E2E-Flow
+  links:
+    - url: https://eteamspace.internal.ericsson.com/display/IDUN/Team+Kodiak
+      title: Team Kodiak Confluence
+      icon: dashboard
+    - url: https://adp.ericsson.se/marketplace/pm-stats-query-service
+      title: Marketplace
+      icon: dashboard
+  tags:
+    - ericsson-intelligent-controller
+    - pm-stats-calculation-handling
+  roles:
+    scrum-master: etsaloi
+    product-owner: eszazse
+    ci-spoc: etiboil
+    test-expert: eemrlgo
+    microservice-architect: etiboil
+    security-master: etsaloi
+    line-manager: egabnyi
+  productProperties:
+    definition:
+      $yaml: https://gerrit-gamma.gic.ericsson.se/plugins/gitiles/OSS/com.ericsson.oss.air/eric-oss-pm-stats-query-service/+/refs/heads/master/plms/product_structure.yaml
+  approval:
+    date: 18-04-2024
+    approver: etiboil
+spec:
+  system: eric-oss-pm-stats-calc-handling
+  lifecycle: production
+  owner: kodiak
+  type: microservice
+  dependsOn:
+    - component:eric-pm-kpi-data

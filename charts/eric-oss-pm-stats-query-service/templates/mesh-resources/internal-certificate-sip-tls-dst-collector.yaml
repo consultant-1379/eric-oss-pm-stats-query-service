@@ -1,0 +1,42 @@
+{{- $serviceMesh := include "eric-oss-pm-stats-query-service.service-mesh-enabled" . | trim -}}
+{{- $tls := include "eric-oss-pm-stats-query-service.global-security-tls-enabled" . | trim -}}
+{{- if and (eq $serviceMesh "true") (eq $tls "true") -}}
+
+#
+# COPYRIGHT Ericsson 2024
+#
+#
+#
+# The copyright to the computer program(s) herein is the property of
+#
+# Ericsson Inc. The programs may be used and/or copied only with written
+#
+# permission from Ericsson Inc. or in accordance with the terms and
+#
+# conditions stipulated in the agreement/contract under which the
+#
+# program(s) have been supplied.
+#
+
+apiVersion: siptls.sec.ericsson.com/v1
+kind: InternalCertificate
+metadata:
+  name: {{ include "eric-oss-pm-stats-query-service.name" . }}-eric-dst-collector-int-cert
+  labels:
+  {{- include "eric-oss-pm-stats-query-service.labels" . | nindent 4 }}
+  annotations:
+  {{- include "eric-oss-pm-stats-query-service.annotations" . | nindent 4 }}
+spec:
+  kubernetes:
+    generatedSecretName: {{ include "eric-oss-pm-stats-query-service.name" . }}-eric-dst-collector-secret
+    certificateName: "cert.pem"
+    privateKeyName: "key.pem"
+  certificate:
+    subject:
+      cn: {{ include "eric-oss-pm-stats-query-service.name" . }}
+    issuer:
+      reference: eric-dst-collector-ca
+    extendedKeyUsage:
+      tlsClientAuth: true
+      tlsServerAuth: true
+{{- end }}

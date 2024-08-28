@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ ~ COPYRIGHT Ericsson 2023
+ ~
+ ~
+ ~
+ ~ The copyright to the computer program(s) herein is the property of
+ ~
+ ~ Ericsson Inc. The programs may be used and/or copied only with written
+ ~
+ ~ permission from Ericsson Inc. or in accordance with the terms and
+ ~
+ ~ conditions stipulated in the agreement/contract under which the
+ ~
+ ~ program(s) have been supplied.
+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+<configuration>
+  <appender name="json" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+      <!-- https://gerrit.ericsson.se/plugins/gitiles/bssf/adp-log/api/+/refs/heads/master/schema/log-event/src/main/resources/log-event.1.json -->
+      <!-- https://eteamspace.internal.ericsson.com/display/AA/Log+schema+details -->
+      <providers>
+        <version>
+          <fieldName>version</fieldName>
+          <version>1.2.0</version>
+        </version>
+        <timestamp>
+          <fieldName>timestamp</fieldName>
+          <pattern>yyyy-MM-dd'T'HH:mm:ss.SSSZ</pattern>
+        </timestamp>
+        <!-- this custom provider adds severity as per ADP Schema 1.2.0 values -->
+        <provider class="com.ericsson.oss.orchestration.eo.provider.ADPSeverityJsonProvider"/>
+        <pattern>
+          <omitEmptyFields>false</omitEmptyFields>
+          <pattern>
+            {
+              "service_id": "${SERVICE_ID:-unknown}",
+              "message": "%msg"
+            }
+          </pattern>
+        </pattern>
+        <pattern>
+          <omitEmptyFields>true</omitEmptyFields>
+          <pattern>
+            {
+              "facility": "%X{facility}",
+              "subject": "%X{subject}",
+              "extra_data": {
+                "logger": "%logger",
+                "thread_info": {
+                  "thread_name": "%thread"
+                },
+                "dst": {
+                  "trace_id": "%mdc{traceId}"
+                },
+                "exception": {
+                  "stack_trace": "%xEx"
+                }
+              },
+              "metadata": {
+                "category": "%X{category}",
+                "pod_name": "${POD_NAME:-unknown}",
+                "pod_uid": "${POD_UID:-unknown}",
+                "container_name": "${CONTAINER_NAME:-unknown}",
+                "node_name": "${NODE_NAME:-unknown}",
+                "namespace": "${NAMESPACE:-unknown}"
+              }
+            }
+          </pattern>
+        </pattern>
+      </providers>
+    </encoder>
+  </appender>
+
+  <root level="${ROOT_LOG_LEVEL:-INFO}">
+    <appender-ref ref="json"/>
+  </root>
+
+  <logger name="/" level="${ROOT_LOG_LEVEL:-INFO}"/>
+</configuration>
+

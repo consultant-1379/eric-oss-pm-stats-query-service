@@ -1,0 +1,465 @@
+#
+# COPYRIGHT Ericsson 2024
+#
+#
+#
+# The copyright to the computer program(s) herein is the property of
+#
+# Ericsson Inc. The programs may be used and/or copied only with written
+#
+# permission from Ericsson Inc. or in accordance with the terms and
+#
+# conditions stipulated in the agreement/contract under which the
+#
+# program(s) have been supplied.
+#
+  
+{{- if index .Values "cnomServer" "enabled" }}
+{{- $podLabel := include "eric-oss-pm-stats-query-service.cnom-pod-label" . }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "eric-oss-pm-stats-query-service.name.noQuote" . }}-use-metrics-configmap
+  labels:
+    {{- include "eric-oss-pm-stats-query-service.cnom-configmap-labels" . | nindent 4 }}
+  annotations:
+    {{- include "eric-oss-pm-stats-query-service.annotations" . | nindent 4 }}
+data:
+  qs-use-metrics.json: |
+    {
+      "namespace": "PMH_QS_USE",
+      "dashboards": [
+        {
+          "_id": "eric_oss_pm_stats_query_service_use_metrics_dashboard",
+          "title": "PM Stats Query Service USE Metrics",
+          "apps": ["statusOverview"],
+          "dashboardTreeView": {
+            "tree": [["PM Stats Calculation Handling", "PM Stats Query Service", "USE Metrics"]]
+          },
+          "order": 0,
+          "tiles": [
+            {
+              "xSize": 5,
+              "widget": "widget_timeline_jvm_buffer_count_buffers"
+            },
+            {
+              "xSize": 5,
+              "widget": "widget_timeline_jvm_buffer_memory_used_bytes"
+            },
+            {
+              "xSize": 5,
+              "widget": "widget_timeline_jvm_buffer_total_capacity_bytes"
+            },
+            {
+              "xSize": 5,
+              "widget": "widget_timeline_jvm_classes_loaded_classes"
+            },
+            {
+              "xSize": 5,
+              "widget": "widget_timeline_jvm_classes_unloaded_classes_total"
+            },
+            {
+              "xSize": 5,
+              "widget": "widget_timeline_jvm_gc_live_data_size_bytes"
+            },
+            {
+              "xSize": 5,
+              "widget": "widget_timeline_jvm_gc_max_data_size_bytes"
+            },
+            {
+              "xSize": 5,
+              "widget": "widget_timeline_jvm_gc_memory_allocated_bytes_total"
+            },
+            {
+              "xSize": 5,
+              "widget": "widget_timeline_jvm_gc_memory_promoted_bytes_total"
+            },
+            {
+              "xSize": 5,
+              "widget": "widget_timeline_jvm_gc_overhead_percent"
+            },
+            {
+              "xSize": 5,
+              "widget": "widget_timeline_jvm_gc_pause_seconds_count"
+            },
+            {
+              "xSize": 5,
+              "widget": "widget_timeline_jvm_gc_pause_seconds_max"
+            },
+            {
+              "xSize": 5,
+              "widget": "widget_timeline_jvm_gc_pause_seconds_sum"
+            },
+            {
+              "xSize": 5,
+              "widget": "widget_timeline_jvm_memory_committed_bytes"
+            },
+            {
+              "xSize": 5,
+              "widget": "widget_timeline_jvm_memory_max_bytes"
+            },
+            {
+              "xSize": 5,
+              "widget": "widget_timeline_jvm_memory_usage_after_gc_percent"
+            },
+            {
+              "xSize": 5,
+              "widget": "widget_timeline_jvm_memory_used_bytes"
+            },
+            {
+              "xSize": 5,
+              "widget": "widget_timeline_jvm_threads_daemon_threads"
+            },
+            {
+              "xSize": 5,
+              "widget": "widget_timeline_jvm_threads_live_threads"
+            },
+            {
+              "xSize": 5,
+              "widget": "widget_timeline_jvm_threads_peak_threads"
+            },
+            {
+              "xSize": 5,
+              "widget": "widget_timeline_jvm_threads_states_threads"
+            },
+            {
+              "xSize": 5,
+              "widget": "widget_timeline_logback_events_total"
+            },
+            {
+              "xSize": 5,
+              "widget": "widget_timeline_process_cpu_usage"
+            },
+            {
+              "xSize": 5,
+              "widget": "widget_timeline_system_cpu_usage"
+            },
+            {
+              "xSize": 5,
+              "widget": "widget_timeline_system_load_average_1m"
+            }
+          ]
+        }
+      ],
+      "widgets": [
+        {
+          "_id": "widget_timeline_jvm_buffer_count_buffers",
+          "widgetType": "timeline",
+          "title": "JVM buffers",
+          "sources": [{"source": "source_jvm_buffer_count_buffers"}]
+        },
+        {
+          "_id": "widget_timeline_jvm_buffer_memory_used_bytes",
+          "widgetType": "timeline",
+          "title": "JVM used buffer memory",
+          "unit": "bytes",
+          "sources": [{ "source": "source_jvm_buffer_memory_used_bytes" }]
+        },
+        {
+          "_id": "widget_timeline_jvm_buffer_total_capacity_bytes",
+          "widgetType": "timeline",
+          "title": "JVM buffer capacity",
+          "unit": "bytes",
+          "sources": [{ "source": "source_jvm_buffer_total_capacity_bytes" }]
+        },
+        {
+          "_id": "widget_timeline_jvm_classes_loaded_classes",
+          "widgetType": "timeline",
+          "title": "JVM loaded classes",
+          "sources": [{ "source": "source_jvm_classes_loaded_classes" }]
+        },
+        {
+          "_id": "widget_timeline_jvm_classes_unloaded_classes_total",
+          "widgetType": "timeline",
+          "title": "JVM unloaded classes",
+          "sources": [{ "source": "source_jvm_classes_unloaded_classes_total" }]
+        },
+        {
+          "_id": "widget_timeline_jvm_gc_live_data_size_bytes",
+          "widgetType": "timeline",
+          "title": "JVM GC live data size",
+          "unit": "bytes",
+          "sources": [{ "source": "source_jvm_gc_live_data_size_bytes" }]
+        },
+        {
+          "_id": "widget_timeline_jvm_gc_max_data_size_bytes",
+          "widgetType": "timeline",
+          "title": "JVM GC max data size",
+          "unit": "bytes",
+          "sources": [{ "source": "source_jvm_gc_max_data_size_bytes" }]
+        },
+        {
+          "_id": "widget_timeline_jvm_gc_memory_allocated_bytes_total",
+          "widgetType": "timeline",
+          "title": "JVM GC allocated memory",
+          "unit": "bytes",
+          "sources": [{ "source": "source_jvm_gc_memory_allocated_bytes_total" }]
+        },
+        {
+          "_id": "widget_timeline_jvm_gc_memory_promoted_bytes_total",
+          "widgetType": "timeline",
+          "title": "JVM GC promoted memory",
+          "unit": "bytes",
+          "sources": [{ "source": "source_jvm_gc_memory_promoted_bytes_total" }]
+        },
+        {
+          "_id": "widget_timeline_jvm_gc_overhead_percent",
+          "widgetType": "timeline",
+          "title": "JVM GC overhead",
+          "unit": "%",
+          "sources": [{ "source": "source_jvm_gc_overhead_percent" }]
+        },
+        {
+          "_id": "widget_timeline_jvm_gc_pause_seconds_count",
+          "widgetType": "timeline",
+          "title": "JVM GC pause count",
+          "sources": [{ "source": "source_jvm_gc_pause_seconds_count" }]
+        },
+        {
+          "_id": "widget_timeline_jvm_gc_pause_seconds_max",
+          "widgetType": "timeline",
+          "title": "JVM GC pause max",
+          "unit": "sec",
+          "sources": [{ "source": "source_jvm_gc_pause_seconds_max" }]
+        },
+        {
+          "_id": "widget_timeline_jvm_gc_pause_seconds_sum",
+          "widgetType": "timeline",
+          "title": "JVM GC pause sum",
+          "unit": "sec",
+          "sources": [{ "source": "source_jvm_gc_pause_seconds_sum" }]
+        },
+        {
+          "_id": "widget_timeline_jvm_memory_committed_bytes",
+          "widgetType": "timeline",
+          "title": "JVM committed memory",
+          "unit": "bytes",
+          "sources": [{ "source": "source_jvm_memory_committed_bytes" }]
+        },
+        {
+          "_id": "widget_timeline_jvm_memory_max_bytes",
+          "widgetType": "timeline",
+          "title": "JVM max memory",
+          "unit": "bytes",
+          "sources": [{ "source": "source_jvm_memory_max_bytes" }]
+        },
+        {
+          "_id": "widget_timeline_jvm_memory_usage_after_gc_percent",
+          "widgetType": "timeline",
+          "title": "JVM memory usage after GC",
+          "unit": "%",
+          "sources": [{ "source": "source_jvm_memory_usage_after_gc_percent" }]
+        },
+        {
+          "_id": "widget_timeline_jvm_memory_used_bytes",
+          "widgetType": "timeline",
+          "title": "JVM used memory",
+          "unit": "bytes",
+          "sources": [{ "source": "source_jvm_memory_used_bytes" }]
+        },
+        {
+          "_id": "widget_timeline_jvm_threads_daemon_threads",
+          "widgetType": "timeline",
+          "title": "JVM daemon threads",
+          "sources": [{ "source": "source_jvm_threads_daemon_threads" }]
+        },
+        {
+          "_id": "widget_timeline_jvm_threads_live_threads",
+          "widgetType": "timeline",
+          "title": "JVM daemon and non-daemon threads",
+          "sources": [{ "source": "source_jvm_threads_live_threads" }]
+        },
+        {
+          "_id": "widget_timeline_jvm_threads_peak_threads",
+          "widgetType": "timeline",
+          "title": "JVM peak threads",
+          "sources": [{ "source": "source_jvm_threads_peak_threads" }]
+        },
+        {
+          "_id": "widget_timeline_jvm_threads_states_threads",
+          "widgetType": "timeline",
+          "title": "JVM threads",
+          "sources": [{ "source": "source_jvm_threads_states_threads" }]
+        },
+        {
+          "_id": "widget_timeline_logback_events_total",
+          "widgetType": "timeline",
+          "title": "Logback events",
+          "sources": [{ "source": "source_logback_events_total" }]
+        },
+        {
+          "_id": "widget_timeline_process_cpu_usage",
+          "widgetType": "timeline",
+          "title": "Process CPU usage",
+          "unit": "CPU",
+          "sources": [{ "source": "source_process_cpu_usage" }]
+        },
+        {
+          "_id": "widget_timeline_system_cpu_usage",
+          "widgetType": "timeline",
+          "title": "System CPU usage",
+          "unit": "CPU",
+          "sources": [{ "source": "source_system_cpu_usage" }]
+        },
+        {
+          "_id": "widget_timeline_system_load_average_1m",
+          "widgetType": "timeline",
+          "title": "Average system load time",
+          "unit": "sec",
+          "sources": [{ "source": "source_system_load_average_1m" }]
+        }
+      ],
+      "sources": [
+        {
+          "_id": "source_jvm_buffer_count_buffers",
+          "sourceType": "prometheus",
+          "query": "sum by ({{ $podLabel }}) (jvm_buffer_count_buffers{{ print "{" }}{{ $podLabel }}=~'eric-oss-pm-stats-query-service.*'})",
+          "splitByLabelName": "{{ $podLabel }}"
+        },
+        {
+          "_id": "source_jvm_buffer_memory_used_bytes",
+          "sourceType": "prometheus",
+          "query": "sum by ({{ $podLabel }}) (jvm_buffer_memory_used_bytes{{ print "{" }}{{ $podLabel }}=~'eric-oss-pm-stats-query-service.*'})",
+          "splitByLabelName": "{{ $podLabel }}"
+        },
+        {
+          "_id": "source_jvm_buffer_total_capacity_bytes",
+          "sourceType": "prometheus",
+          "query": "sum by ({{ $podLabel }}) (jvm_buffer_total_capacity_bytes{{ print "{" }}{{ $podLabel }}=~'eric-oss-pm-stats-query-service.*'})",
+          "splitByLabelName": "{{ $podLabel }}"
+        },
+        {
+          "_id": "source_jvm_classes_loaded_classes",
+          "sourceType": "prometheus",
+          "query": "jvm_classes_loaded_classes{{ print "{" }}{{ $podLabel }}=~'eric-oss-pm-stats-query-service.*'}",
+          "splitByLabelName": "{{ $podLabel }}"
+        },
+        {
+          "_id": "source_jvm_classes_unloaded_classes_total",
+          "sourceType": "prometheus",
+          "query": "jvm_classes_unloaded_classes_total{{ print "{" }}{{ $podLabel }}=~'eric-oss-pm-stats-query-service.*'}",
+          "splitByLabelName": "{{ $podLabel }}"
+        },
+        {
+          "_id": "source_jvm_gc_live_data_size_bytes",
+          "sourceType": "prometheus",
+          "query": "jvm_gc_live_data_size_bytes{{ print "{" }}{{ $podLabel }}=~'eric-oss-pm-stats-query-service.*'}",
+          "splitByLabelName": "{{ $podLabel }}"
+        },
+        {
+          "_id": "source_jvm_gc_max_data_size_bytes",
+          "sourceType": "prometheus",
+          "query": "jvm_gc_max_data_size_bytes{{ print "{" }}{{ $podLabel }}=~'eric-oss-pm-stats-query-service.*'}",
+          "splitByLabelName": "{{ $podLabel }}"
+        },
+        {
+          "_id": "source_jvm_gc_memory_allocated_bytes_total",
+          "sourceType": "prometheus",
+          "query": "jvm_gc_memory_allocated_bytes_total{{ print "{" }}{{ $podLabel }}=~'eric-oss-pm-stats-query-service.*'}",
+          "splitByLabelName": "{{ $podLabel }}"
+        },
+        {
+          "_id": "source_jvm_gc_memory_promoted_bytes_total",
+          "sourceType": "prometheus",
+          "query": "jvm_gc_memory_promoted_bytes_total{{ print "{" }}{{ $podLabel }}=~'eric-oss-pm-stats-query-service.*'}",
+          "splitByLabelName": "{{ $podLabel }}"
+        },
+        {
+          "_id": "source_jvm_gc_overhead_percent",
+          "sourceType": "prometheus",
+          "query": "jvm_gc_overhead_percent{{ print "{" }}{{ $podLabel }}=~'eric-oss-pm-stats-query-service.*'}",
+          "splitByLabelName": "{{ $podLabel }}"
+        },
+        {
+          "_id": "source_jvm_gc_pause_seconds_count",
+          "sourceType": "prometheus",
+          "query": "sum by ({{ $podLabel }}) (jvm_gc_pause_seconds_count{{ print "{" }}{{ $podLabel }}=~'eric-oss-pm-stats-query-service.*'})",
+          "splitByLabelName": "{{ $podLabel }}"
+        },
+        {
+          "_id": "source_jvm_gc_pause_seconds_max",
+          "sourceType": "prometheus",
+          "query": "sum by ({{ $podLabel }}) (jvm_gc_pause_seconds_max{{ print "{" }}{{ $podLabel }}=~'eric-oss-pm-stats-query-service.*'})",
+          "splitByLabelName": "{{ $podLabel }}"
+        },
+        {
+          "_id": "source_jvm_gc_pause_seconds_sum",
+          "sourceType": "prometheus",
+          "query": "sum by ({{ $podLabel }}) (jvm_gc_pause_seconds_sum{{ print "{" }}{{ $podLabel }}=~'eric-oss-pm-stats-query-service.*'})",
+          "splitByLabelName": "{{ $podLabel }}"
+        },
+        {
+          "_id": "source_jvm_memory_committed_bytes",
+          "sourceType": "prometheus",
+          "query": "sum by ({{ $podLabel }}) (jvm_memory_committed_bytes{{ print "{" }}{{ $podLabel }}=~'eric-oss-pm-stats-query-service.*'})",
+          "splitByLabelName": "{{ $podLabel }}"
+        },
+        {
+          "_id": "source_jvm_memory_max_bytes",
+          "sourceType": "prometheus",
+          "query": "sum by ({{ $podLabel }}) (jvm_memory_max_bytes{{ print "{" }}{{ $podLabel }}=~'eric-oss-pm-stats-query-service.*'})",
+          "splitByLabelName": "{{ $podLabel }}"
+        },
+        {
+          "_id": "source_jvm_memory_usage_after_gc_percent",
+          "sourceType": "prometheus",
+          "query": "sum by ({{ $podLabel }}) (jvm_memory_usage_after_gc_percent{{ print "{" }}{{ $podLabel }}=~'eric-oss-pm-stats-query-service.*'})",
+          "splitByLabelName": "{{ $podLabel }}"
+        },
+        {
+          "_id": "source_jvm_memory_used_bytes",
+          "sourceType": "prometheus",
+          "query": "sum by ({{ $podLabel }}) (jvm_memory_used_bytes{{ print "{" }}{{ $podLabel }}=~'eric-oss-pm-stats-query-service.*'})",
+          "splitByLabelName": "{{ $podLabel }}"
+        },
+        {
+          "_id": "source_jvm_threads_daemon_threads",
+          "sourceType": "prometheus",
+          "query": "jvm_threads_daemon_threads{{ print "{" }}{{ $podLabel }}=~'eric-oss-pm-stats-query-service.*'}",
+          "splitByLabelName": "{{ $podLabel }}"
+        },
+        {
+          "_id": "source_jvm_threads_live_threads",
+          "sourceType": "prometheus",
+          "query": "jvm_threads_live_threads{{ print "{" }}{{ $podLabel }}=~'eric-oss-pm-stats-query-service.*'}",
+          "splitByLabelName": "{{ $podLabel }}"
+        },
+        {
+          "_id": "source_jvm_threads_peak_threads",
+          "sourceType": "prometheus",
+          "query": "jvm_threads_peak_threads{{ print "{" }}{{ $podLabel }}=~'eric-oss-pm-stats-query-service.*'}",
+          "splitByLabelName": "{{ $podLabel }}"
+        },
+        {
+          "_id": "source_jvm_threads_states_threads",
+          "sourceType": "prometheus",
+          "query": "sum by ({{ $podLabel }}) (jvm_threads_states_threads{{ print "{" }}{{ $podLabel }}=~'eric-oss-pm-stats-query-service.*'})",
+          "splitByLabelName": "{{ $podLabel }}"
+        },
+        {
+          "_id": "source_logback_events_total",
+          "sourceType": "prometheus",
+          "query": "sum by ({{ $podLabel }}) (logback_events_total{{ print "{" }}{{ $podLabel }}=~'eric-oss-pm-stats-query-service.*'})",
+          "splitByLabelName": "{{ $podLabel }}"
+        },
+        {
+          "_id": "source_process_cpu_usage",
+          "sourceType": "prometheus",
+          "query": "process_cpu_usage{{ print "{" }}{{ $podLabel }}=~'eric-oss-pm-stats-query-service.*'}",
+          "splitByLabelName": "{{ $podLabel }}"
+        },
+        {
+          "_id": "source_system_cpu_usage",
+          "sourceType": "prometheus",
+          "query": "system_cpu_usage{{ print "{" }}{{ $podLabel }}=~'eric-oss-pm-stats-query-service.*'}",
+          "splitByLabelName": "{{ $podLabel }}"
+        },
+        {
+          "_id": "source_system_load_average_1m",
+          "sourceType": "prometheus",
+          "query": "system_load_average_1m{{ print "{" }}{{ $podLabel }}=~'eric-oss-pm-stats-query-service.*'}",
+          "splitByLabelName": "{{ $podLabel }}"
+        }
+      ]
+    }
+    {{- end }}

@@ -1,0 +1,32 @@
+#
+# COPYRIGHT Ericsson 2021
+#
+#
+#
+# The copyright to the computer program(s) herein is the property of
+#
+# Ericsson Inc. The programs may be used and/or copied only with written
+#
+# permission from Ericsson Inc. or in accordance with the terms and
+#
+# conditions stipulated in the agreement/contract under which the
+#
+# program(s) have been supplied.
+#
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ include "eric-oss-pm-stats-query-service.name" . }}-rolebinding-allowed-use-privileged
+  labels:
+    {{- include "eric-oss-pm-stats-query-service.labels" . | nindent 4 }}
+  annotations:
+    {{- include "eric-oss-pm-stats-query-service.securityPolicy.annotations" . | nindent 4 }}
+    {{- include "eric-oss-pm-stats-query-service.annotations" . | nindent 4 }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: {{ .Release.Name }}-allowed-use-privileged-policy
+subjects:
+  - kind: ServiceAccount
+    name: {{ include "eric-oss-pm-stats-query-service.name" . }}

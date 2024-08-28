@@ -1,0 +1,32 @@
+#
+# COPYRIGHT Ericsson 2024
+#
+#
+#
+# The copyright to the computer program(s) herein is the property of
+#
+# Ericsson Inc. The programs may be used and/or copied only with written
+#
+# permission from Ericsson Inc. or in accordance with the terms and
+#
+# conditions stipulated in the agreement/contract under which the
+#
+# program(s) have been supplied.
+#
+
+{{- if .Values.cnomServer.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "eric-oss-pm-stats-query-service.name.noQuote" . }}-cnom-status-overview-configmap
+  labels:
+    {{- include "eric-oss-pm-stats-query-service.labels" . | nindent 4 }}
+  annotations:
+    {{- include "eric-oss-pm-stats-query-service.annotations" . | nindent 4 }}
+data:
+  cnom-status-overview.yaml: |-
+    app: "statusOverview"
+    feature: "status_overview"
+    dashboardTreeView:
+      enabled: true
+{{- end }}

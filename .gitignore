@@ -1,0 +1,50 @@
+HELP.md
+/target/
+!.mvn/wrapper/maven-wrapper.jar
+*.txt
+!ci/local_pipeline_env.txt
+!fossa/local_dep_tree.txt
+*.log
+*.sha256
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### VS Code ###
+.vscode/
+
+### BOB Temporary Files/Folders ###
+bob
+.bob.env
+.bob/
+.bob*/
+k8s-logs/
+build
+
+### SonarQube Working Directory ###
+?/
+
+### Spinnaker Temporary Properties ###
+artifact.properties
+
+### REST2HTML Artifacts ###
+rest2html*.zip
+rest_conversion_log.txt
+**/*.zip
+
+### index.html & openapi sha256 files
+src/main/resources/v1/index.html
+src/main/resources/v1/.openapi-generator/*openapi.yaml.sha256
+
+### Temporary file, fetched for FOSSA manual steps ###
+fossa-report.json
+
+### QS specific ###
+eric-oss-pm-stats-qs-args
+
+### ignore CI-Jenkinsfiles
+ci/common_precodereview.Jenkinsfile
+ci/common_ruleset2.0.yaml

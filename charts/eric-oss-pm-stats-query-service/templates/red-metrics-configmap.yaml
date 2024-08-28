@@ -1,0 +1,99 @@
+#
+# COPYRIGHT Ericsson 2024
+#
+#
+#
+# The copyright to the computer program(s) herein is the property of
+#
+# Ericsson Inc. The programs may be used and/or copied only with written
+#
+# permission from Ericsson Inc. or in accordance with the terms and
+#
+# conditions stipulated in the agreement/contract under which the
+#
+# program(s) have been supplied.
+#
+  
+{{- if index .Values "cnomServer" "enabled" }}
+{{- $podLabel := include "eric-oss-pm-stats-query-service.cnom-pod-label" . }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "eric-oss-pm-stats-query-service.name.noQuote" . }}-red-metrics-configmap
+  labels:
+    {{- include "eric-oss-pm-stats-query-service.cnom-configmap-labels" . | nindent 4 }}
+  annotations:
+    {{- include "eric-oss-pm-stats-query-service.annotations" . | nindent 4 }}
+data:
+  qs-red-metrics.json: |
+    {
+      "namespace": "PMH_QS_RED",
+      "dashboards": [
+        {
+          "_id": "eric_oss_pm_stats_query_service_red_metrics_dashboard",
+          "title": "PM Stats Query Service RED Metrics",
+          "apps": ["statusOverview"],
+          "dashboardTreeView": {
+            "tree": [["PM Stats Calculation Handling", "PM Stats Query Service", "RED Metrics"]]
+          },
+          "order": 0,
+          "tiles": [
+            {
+              "xSize": 5,
+              "widget": "widget_timeline_http_server_requests_seconds_count"
+            },
+            {
+              "xSize": 5,
+              "widget": "widget_timeline_http_server_requests_seconds_max"
+            },
+            {
+              "xSize": 5,
+              "widget": "widget_timeline_http_server_requests_seconds_sum"
+            }
+          ]
+        }
+      ],
+      "widgets": [
+        {
+          "_id": "widget_timeline_http_server_requests_seconds_count",
+          "widgetType": "timeline",
+          "title": "HTTP Server Requests Count",
+          "sources": [{ "source": "source_http_server_requests_seconds_count" }]
+        },
+        {
+          "_id": "widget_timeline_http_server_requests_seconds_max",
+          "widgetType": "timeline",
+          "title": "HTTP Server Requests Max",
+          "unit": "sec",
+          "sources": [{"source": "source_http_server_requests_seconds_max"}]
+        },
+        {
+          "_id": "widget_timeline_http_server_requests_seconds_sum",
+          "widgetType": "timeline",
+          "title": "HTTP Server Requests Sum",
+          "unit": "sec",
+          "sources": [{"source": "source_http_server_requests_seconds_sum"}]
+        }
+      ],
+      "sources": [
+        {
+          "_id": "source_http_server_requests_seconds_count",
+          "sourceType": "prometheus",
+          "query": "sum by ({{ $podLabel }}) (http_server_requests_seconds_count{{ print "{" }}{{ $podLabel }}=~'eric-oss-pm-stats-query-service.*'})",
+          "splitByLabelName": "{{ $podLabel }}"
+        },
+        {
+          "_id": "source_http_server_requests_seconds_max",
+          "sourceType": "prometheus",
+          "query": "sum by ({{ $podLabel }}) (http_server_requests_seconds_max{{ print "{" }}{{ $podLabel }}=~'eric-oss-pm-stats-query-service.*'})",
+          "splitByLabelName": "{{ $podLabel }}"
+        },
+        {
+          "_id": "source_http_server_requests_seconds_sum",
+          "sourceType": "prometheus",
+          "query": "sum by ({{ $podLabel }}) (http_server_requests_seconds_sum{{ print "{" }}{{ $podLabel }}=~'eric-oss-pm-stats-query-service.*'})",
+          "splitByLabelName": "{{ $podLabel }}"
+        }
+      ]
+    }
+    {{- end }}

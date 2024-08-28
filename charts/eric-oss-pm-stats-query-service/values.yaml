@@ -1,0 +1,278 @@
+#
+# COPYRIGHT Ericsson 2024
+#
+#
+#
+# The copyright to the computer program(s) herein is the property of
+#
+# Ericsson Inc. The programs may be used and/or copied only with written
+#
+# permission from Ericsson Inc. or in accordance with the terms and
+#
+# conditions stipulated in the agreement/contract under which the
+#
+# program(s) have been supplied.
+#
+
+# Default values for eric-oss-pm-stats-query-service.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+#global:
+#  annotations: {}
+#  labels: {}
+#  timezone: UTC
+#  registry:
+#    repopath:
+#    url: armdocker.rnd.ericsson.se
+#    imagePullPolicy: IfNotPresent
+#  #Secret must be manually created in the namespace, no default value
+#  pullSecret: eric-adp-example-secret
+#  fsGroup:
+#    Sets a fsGroup ID for all services. The value is given as below:
+#    integer - This is the GID value that is used for fsGroup; null - The namespace default configuration is evaluated.
+#    manual: null # { range='0..max', null } [default=null]
+#    @conditional: Not evaluated when global.fsGroup.manual is set. Sets a fsGroup to use namespace default. The value is given as below:
+#    true - The namespace default is used; false - The namespace default is not used; null - Value 10,000 shall be used as GID.
+#    namespace: null # { values='true', 'false', null } [default=null
+#  # The IP family the service belongs to when service.type is set to ClusterIP.
+#  # Options are: IPv4, IPv6
+#  internalIPFamily:
+#  nodeSelector:
+#  security:
+#    policyBinding:
+#      create: true
+#    policyReferenceMap:
+#      default-restricted-security-policy: "<restricted security policy at customer deployment>"
+#    tls:
+#      enabled: false
+#  securityPolicy:
+#    rolekind: "" # { choice='Role, ClusterRole, ""'' } [ default="" ]
+#  serviceMesh:
+#    enabled: true
+#    annotations: {}
+#  # Configuring global streamingMethod: indirect, direct, dual. default=direct
+#  indirect - stdout to infrastructure logging framework
+#  direct - direct streaming to the Log Aggregator (Log Transformer)
+#  dual - stdout to infrastructure logging framework and direct streaming to Log Aggregator
+#  null - indicates either an unset value or the absence of parameter. The streaming method to use is determined at service level. If no value is available at service level, the service shall configure indirect streaming.
+#  log:
+#    streamingMethod: "direct"
+#  # When the global ID for supplementalGroups is set, and both global and local values are provided,
+#  # the global values are combined with the local values. If no local settings are given, the global values will be used as-is.
+#  podSecurityContext:
+#    supplementalGroups: null #{value='0...max'}{default=null}
+#  tolerations: []
+
+query:
+  database:
+    url: "jdbc:postgresql://eric-data-document-database-pg:5432/dynamic_schema"
+    enabled: false
+  credentials:
+    kubernetesSecretName: "eric-oss-pm-stats-query-service-secret"
+    roUserName: "kpi_service_user_ro"
+    keyForUserId: "username"
+    keyForUserPw: "password"
+    database:
+      username: "postgres"
+      password: "superpwd"
+  kafka:
+    url: "eric-data-message-bus-kf:9092"
+    enabled: false
+    brokerPortTls: 9093
+
+flyway:
+  enabled: false
+
+lifecycle:
+  preStop:
+    command: "['/bin/sh', '-c', 'echo PreStop works']"
+
+replicaCount: 2
+
+podDisruptionBudget:
+  # Minimum number/percentage of Pods that must remain available during the planned disruption.
+  # Value can be expressed as an integer or as a percentage. When specified as a percentage of the Pods,
+  # if it does not map to an exact number, Kubernetes rounds up to the nearest integer.
+  # minAvailable: 2 # example value for 2 pods defined as integer
+  # Only one of minAvailable or maxUnavailable can be in effect at a time. If both are set minAvailable takes precedence
+  minAvailable: 1
+  maxUnavailable:
+
+updateStrategy:
+ type: "RollingUpdate"
+ rollingUpdate:
+   maxSurge: 1
+   maxUnavailable: 0
+
+#Empty labels list for application deployment engineer to add more labels (In Compliance with DR-D1121-068).
+labels: {}
+
+imageCredentials:
+  eric-oss-pm-stats-query-service:
+    repoPath: # see default in eric-product-info.yaml
+    registry: {}
+      # overrides global registry url
+      # url:
+      #- Secret must be manually created in the namespace, no default value
+      # pullSecret: REPO_SECRET
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+
+annotations: {}
+
+service:
+  type: "ClusterIP"
+  port: 8080    # Changed from 80 to 8080 and spring application is hosted on 8080
+  endpoints:
+    chassisapi:
+      tls:
+        enforced: "required"
+        verifyClientCertificate: "required"
+
+eric-pm-server:
+  rbac:
+    appMonitoring:
+      enabled: true
+
+prometheus:
+  path: /actuator/prometheus
+  scrape: true
+
+terminationGracePeriodSeconds: 30
+
+resources:
+  eric-oss-pm-stats-query-service:
+    requests:
+      memory: "256Mi"
+      cpu: "125m"
+      ephemeral-storage: ""
+    limits:
+      memory: "2Gi"
+      cpu: "500m"
+      ephemeral-storage: ""
+    jvm:
+      initialMemoryAllocationPercentage: 50
+      smallMemoryAllocationMaxPercentage: 70
+      largeMemoryAllocationMaxPercentage: 75
+
+autoScaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+nodeSelector: {}
+topologySpreadConstraints:
+  deployment: []
+  test: []
+
+tolerations:
+  - key: "node.kubernetes.io/not-ready"
+    operator: "Exists"
+    effect: "NoExecute"
+    tolerationSeconds: 0
+  - key: "node.kubernetes.io/unreachable"
+    operator: "Exists"
+    effect: "NoExecute"
+    tolerationSeconds: 0
+
+affinity:
+  podAntiAffinity: "soft"
+  topologyKey: "kubernetes.io/hostname"
+
+probes:
+  eric-oss-pm-stats-query-service:
+    livenessProbe:
+      failureThreshold: 3
+      initialDelaySeconds: 60
+      periodSeconds: 10
+      timeoutSeconds: 10
+    readinessProbe:
+      failureThreshold: 3
+      successThreshold: 1
+      initialDelaySeconds: 60
+      periodSeconds: 10
+      timeoutSeconds: 10
+
+podPriority:
+  eric-oss-pm-stats-query-service:
+    priorityClassName: ""
+# choice='unconfined, runtime/default, localhost' [ default= "" ]
+# Configuration of AppArmor profile type. The following values are possible:
+# unconfined  - Indicates that there is no profile loaded.
+# runtime/default - Applies the default profile of the container engine.
+# localhost   - Applies a specific profile loaded on the host
+appArmorProfile:
+  type: ""
+seccompProfile:
+  type: "RuntimeDefault"
+
+# local streamingMethod:
+# indirect - stdout to infrastructure logging framework
+# direct - direct streaming to the Log Aggregator (e.g. eric-log-transformer)
+# dual - stdout to infrastructure logging framework and direct streaming to Log Aggregator
+# null - null or absent parameter the streaming method is determined by global.log.streamingMethod
+log:
+  streamingMethod:
+  # DR-D1114-051 - INT.LOG.CTRL file runtime log severity from file
+  logLevel: INFO
+  logControlFile: /logcontrol/logcontrol.json
+  logstash_port: 9080
+  logstash_port_tls: 9443
+
+# Boolean value which determines whether to deploy the internalUserCA for PMQ when TLS is enabled
+useInternalCA: true
+
+# OSM2ISM configuration
+osm2ism:
+  enabled: false
+  outMeshServices:
+    cnom:
+      enabled: false
+      name: ""
+      intermediateCA:
+        enabled: false
+        name: ""
+
+# The supplementalGroups shall be used when the storage backend, e.g. NFS with certain configurations does not support
+# using fsGroup to change the volume data permissions, or ownership by clients.
+podSecurityContext:
+  supplementalGroups: null #{value='0...max'}{default=null}
+
+# role binding
+securityPolicy:
+  rolename: "eric-oss-pm-stats-query-service"
+
+# CNOM Auto-Discovery
+cnomServer:
+  enabled: true
+
+# Distributed Systems Tracing
+dst:
+  enabled: true #setting to "false" will turn the feature off
+  collector:
+    host: "http://eric-dst-collector"
+    protocol: "http" #(or grpc)
+    portOtlpGrpc: 4317
+    portOtlpHttp: 4318
+    portJaegerGrpc: 14250
+  producer:
+    type: "B3" #can be also (W3C or B3,W3C)
+
+retry:
+  postgres:
+    maxAttempts: 5
+    backoffPeriod: 5000

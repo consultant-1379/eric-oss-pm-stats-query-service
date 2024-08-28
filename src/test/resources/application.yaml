@@ -1,0 +1,103 @@
+#
+# COPYRIGHT Ericsson 2024
+#
+#
+#
+# The copyright to the computer program(s) herein is the property of
+#
+# Ericsson Inc. The programs may be used and/or copied only with written
+#
+# permission from Ericsson Inc. or in accordance with the terms and
+#
+# conditions stipulated in the agreement/contract under which the
+#
+# program(s) have been supplied.
+#
+
+#Metrics related configurations
+management:
+  endpoint:
+    health:
+      probes.enabled: "true"
+  endpoints.web.exposure.include: "*"
+  info.env.enabled: "true"
+  metrics:
+    tags.application: ${spring.application.name}
+    web.server.request.autotime.enabled: "true"
+  prometheus.metrics.export.enabled: "true"
+
+odata-response:
+  max-record-count: 10000
+
+spring:
+  datasource:
+    url: jdbc:tc:postgresql:13.5:///databasename?TC_INITSCRIPT=file:src/test/resources/db_init.sql
+    username: sa
+    driverClassName: org.testcontainers.jdbc.ContainerDatabaseDriver
+    password: mysecretpassword
+  main.allow-bean-definition-overriding: "true"
+  application.name: Query Service
+  flyway.enabled: "false"
+  jpa.hibernate.ddl-auto: none
+  kafka:
+    consumer:
+      bootstrap-servers: localhost:29092
+      group-id: kpi_group
+      auto-offset-reset: earliest
+      key-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
+    properties:
+      spring:
+        deserializer:
+          key.delegate.class: org.apache.kafka.common.serialization.StringDeserializer
+          value.delegate.class: com.ericsson.oss.air.queryservice.config.ExposureConfigKafkaJsonDeserializer
+
+schema-listener.topics: test-compacted
+datasource.enabled: "true"
+kafka.enabled: "false"
+
+retry:
+  postgres:
+    backoffPeriod: 1000
+    maxAttempts: 1
+
+endpoints.health.sensitive: "false"
+info:
+  app:
+    name: '@name@'
+    description: PM Stats Query Service
+    version: '@version@'
+    legal: "COPYRIGHT Ericsson 2023 -
+ The copyright to the computer program(s) herein is the property of
+ Ericsson Inc. The programs may be used and/or copied only with written
+ permission from Ericsson Inc. or in accordance with the terms and
+ conditions stipulated in the agreement/contract under which the
+ program(s) have been supplied."
+
+#See more details about pattern layout: https://logging.apache.org/log4j/1.2/apidocs/org/apache/log4j/PatternLayout.html
+#See more details about logging.pattern.level : https://docs.spring.io/spring-boot/docs/2.5.2/reference/html/features.html#features.logging.custom-log-configuration
+#logging.pattern.level: "%5p [%X{X-B3-TraceId:-},%X{X-B3-SpanId:-},%X{X-Span-Export:-}][%X{userName}]"
+logging.logcontrolfile: ${LOG_CTRL_FILE:/logcontrol/logcontrol.json}
+
+#Set the stubrunner credentials:
+#stubrunner.username: <LAN SIGNUM ID>
+#stubrunner.password: <LAN encripted PWD or JFrog API Key>
+stubrunner:
+  username: ${SELI_ARTIFACTORY_REPO_USER}
+  password: ${SELI_ARTIFACTORY_REPO_PASS}
+
+#Tracing properties
+#management.tracing.propagation.consume // default: [W3C, B3, B3_MULTI]  <--- by default spring micrometer tracing will consume those protocols, it is just an indication that such configuration exists
+management.tracing.propagation.produce: ${ERIC_PROPAGATOR_PRODUCE:[B3]}
+otel.exporter.otlp.traces.protocol: ${OTEL_EXPORTER_OTLP_TRACES_PROTOCOL:grpc}
+#spring.application.name: ${SERVICE_NAME:eric-oss-pm-stats-exporter} SERVICE_ID?
+
+ericsson:
+  tracing:
+    enabled: ${ERIC_TRACING_ENABLED:true}
+    exporter:
+      endpoint: ${ERIC_EXPORTER_ENDPOINT:http://eric-dst-collector:4317}
+      protocol: ${ERIC_EXPORTER_PROTOCOL:grpc}
+    sampler:
+      jaeger_remote:
+        endpoint: ${ERIC_SAMPLER_JAEGER_REMOTE_ENDPOINT:http://eric-dst-collector:14250}

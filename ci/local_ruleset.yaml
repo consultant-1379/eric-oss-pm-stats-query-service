@@ -1,0 +1,278 @@
+#
+# COPYRIGHT Ericsson 2024
+#
+#
+#
+# The copyright to the computer program(s) herein is the property of
+#
+# Ericsson Inc. The programs may be used and/or copied only with written
+#
+# permission from Ericsson Inc. or in accordance with the terms and
+#
+# conditions stipulated in the agreement/contract under which the
+#
+# program(s) have been supplied.
+#
+
+modelVersion: 2.0
+
+description: "Ericsson Java Spring Boot Query Service is a stateless microservice based on the Spring Boot Chassis. This service exposes data from a PostgreSQL database via OData (V4) queries."
+
+# See image catalog: https://confluence.lmera.ericsson.se/display/ACD/ADP+CICD+Docker+Image+Catalog
+docker-images:
+  - adp-helm-dr-check: armdocker.rnd.ericsson.se/proj-adp-cicd-drop/common-library-adp-helm-dr-check:${env.HELM_DR_CHECK_TAG}
+  - adp-maven-builder: armdocker.rnd.ericsson.se/proj-adp-cicd-drop/bob-java17mvnbuilder:${env.MVN_BUILDER_TAG}
+  - adp-release-auto: armdocker.rnd.ericsson.se/proj-adp-cicd-drop/bob-adp-release-auto:${env.RELEASE_AUTO_TAG}
+
+import:
+  common: ../common-properties.yaml
+  common-rules: common_ruleset2.0.yaml
+
+# List of constants
+properties:
+  - enabled-helm-design-rules: "-DhelmDesignRule.config.drHc011=enable -DhelmDesignRule.config.DR-D1120-045-AD=enable"
+  - exempt-helm-design-rules: "-DhelmDesignRule.config.eric-eo-usermgmt.DR-D1123-124=exempt -DhelmDesignRule.config.eric-eo-usermgmt.DR-D1123-125=exempt -DhelmDesignRule.config.DR-D1123-113=exempt -DhelmDesignRule.config.DR-D1125-026=disable -DhelmDesignRule.config.DR-D1125-027=disable -DhelmDesignRule.config.DR-D470223-010=disable -DhelmDesignRule.config.DR-D1125-029=disable"
+
+  # FOSSA
+  - dependency-file-name: fossa/dependencies.yaml
+  - license-agreement-file-name: license.agreement.json
+
+  - service-ports-file-name: ${common.helm-chart-name}_service_ports.json
+  - service-ports-file-path: doc/Helm_Chart_Structured_Data/Service_Ports/${service-ports-file-name}
+  - structured-data-file-name: ${common.helm-chart-name}-structured-data.json
+
+  # Marketplace Documentation Location
+  - doc-repo-base-path: https://arm.seli.gic.ericsson.se/artifactory
+  - doc-arm-dev-repo: ${doc-repo-base-path}/proj-eric-oss-dev-generic-local/${common.helm-chart-name}
+  - doc-arm-ci-repo: ${doc-repo-base-path}/proj-eric-oss-ci-internal-generic-local/${common.helm-chart-name}
+
+env:
+  - HOME
+  - MAVEN_CLI_OPTS (default=-Duser.home=${env.HOME} -B)
+  - PROJ_MVN (default=/proj/mvn)
+  - MAVEN_OPTS (default=-Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn)
+
+  # Default docker image tags
+  - HELM_DR_CHECK_TAG (default=latest)
+  - MVN_BUILDER_TAG (default=latest)
+  - RELEASE_AUTO_TAG (default=latest)
+
+  # ADP Marketplace
+  - ADP_PORTAL_API_KEY (default="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJtc2lkIjoiNjI1MDIxZDk1MDY3MjIwMDkyZGJjYjRiIiwiaW52YWxfc2VjcmV0IjoiYmk5aXlleXZyMSJ9.Uics0816yc-artkc7hK4KLccnE-0fQTo9507mQEc2qY")
+
+  # Credentials
+  - SELI_ARTIFACTORY_REPO_USER
+  - SELI_ARTIFACTORY_REPO_PASS
+
+# Variables, set by below tasks
+var:
+  - version
+
+# Rules to execute
+rules:
+  lint:
+    - task: static-checking
+      docker-image: adp-maven-builder
+      docker-flags: &mvn-docker-flags
+        - "--env MAVEN_OPTS=${env.MAVEN_OPTS}"
+        - "--env HOME=${env.HOME}"
+        - "--volume ${env.PROJ_MVN}:/proj/mvn"
+        - "--volume ${env.HOME}:${env.HOME}"
+      cmd: mvn ${env.MAVEN_CLI_OPTS} compile checkstyle:checkstyle -DskipTests=true
+    - task: metrics-check
+      cmd:
+        - . ./ci/scripts/metrics-checker.sh --chmod=+x && checkValuesYAML ${common.helm-chart-name}
+        - . ./ci/scripts/metrics-checker.sh && checkServiceYAML ${common.helm-chart-name}
+        - . ./ci/scripts/metrics-checker.sh && checkDeploymentYAML ${common.helm-chart-name}
+        - . ./ci/scripts/metrics-checker.sh && checkHelperTPL ${common.helm-chart-name}
+        - . ./ci/scripts/metrics-checker.sh && checkPomXML ${common.helm-chart-name}
+        - . ./ci/scripts/metrics-checker.sh && checkCoreApplicationJAVA ${common.helm-chart-name}
+        - . ./ci/scripts/metrics-checker.sh && passOrFailCheck
+    - task: helm-chart-check
+      docker-image: adp-helm-dr-check
+      cmd: helm-dr-check --helm-chart charts/${common.helm-chart-name} ${enabled-helm-design-rules} ${exempt-helm-design-rules} --helm-v3 --output .bob/
+
+  # Build java source code and package jar file, image building not needed at this stage
+  build:
+    - task: mvn-package
+      docker-image: adp-maven-builder
+      docker-flags: &mvn-docker-flags-with-creds
+        - "--env MAVEN_OPTS=${env.MAVEN_OPTS}"
+        - "--env HOME=${env.HOME}"
+        - "--volume ${env.HOME}:${env.HOME}"
+        - "--volume ${env.PROJ_MVN}:/proj/mvn"
+        - "--env DOCKER_HOST=tcp://host.docker.internal:2375"
+        - "--volume /var/run/docker.sock:/var/run/docker.sock"
+        - "--mount type=tmpfs,destination=/logcontrol"
+        - "--env SELI_ARTIFACTORY_REPO_USER"
+        - "--env SELI_ARTIFACTORY_REPO_PASS"
+        - "--env TZ=Europe/Budapest"
+      cmd: mvn ${env.MAVEN_CLI_OPTS} clean install -DskipTests=true -Dcheckstyle.skip=true -Dcpd.skip=true -Dpmd.skip=true
+
+  # Run unit tests and jacoco coverage for SonarQube analysis
+  test:
+    - task: mvn-package
+      docker-image: adp-maven-builder
+      docker-in-docker: socket
+      docker-flags: *mvn-docker-flags-with-creds
+      cmd: mvn ${env.MAVEN_CLI_OPTS} clean install jacoco:prepare-agent -Dcheckstyle.skip=true -Dcpd.skip=true -Dpmd.skip=true
+
+  upload-mvn-jars:
+    - task: mvn-upload-internal
+      docker-image: adp-maven-builder
+      docker-flags: *mvn-docker-flags-with-creds
+      cmd: mvn ${env.MAVEN_CLI_OPTS} clean deploy -DskipTests=true -Dcheckstyle.skip=true -Dcpd.skip=true -Dpmd.skip=true
+
+  publish-jars:
+    - task: mvn-upload
+      docker-image: adp-maven-builder
+      docker-in-docker: socket
+      docker-flags:
+        - ${env.DOCKER_VOLUME_MAPPING_PASSWD}
+        - "--volume /etc/ssh:/etc/ssh"
+        - "--volume ${env.HOME}:${env.HOME}"
+        - "--volume ${env.PROJ_MVN}:/proj/mvn"
+        - "--volume /var/run/docker.sock:/var/run/docker.sock"
+        - "--env SELI_ARTIFACTORY_REPO_USER=${env.SELI_ARTIFACTORY_REPO_USER}"
+        - "--env SELI_ARTIFACTORY_REPO_PASS=\"${env.SELI_ARTIFACTORY_REPO_PASS}\""
+        - "--env MAVEN_OPTS"
+        - "--env TZ=Europe/Budapest"
+      cmd:
+        - git stash && git checkout master
+        - mvn ${env.MAVEN_CLI_OPTS} clean deploy -Dmaven.javadoc.skip=true -DskipTests=true
+
+  package-local:
+    - task: package-helm-internal-integration
+      docker-image: adp-release-auto
+      docker-flags:
+        - "--env ENABLE_HELM_V3=true"
+      cmd: helm-package
+        --folder charts/${common.helm-chart-name}-integration
+        --workdir .bob --output .bob/${common.helm-chart-name}-internal-integration
+        --version ${var.version}
+        --replace VERSION=${var.version}
+        --replace REPO_PATH=${var.image-repopath-internal}
+        --replace IMAGE_NAME=${common.docker-image-name}
+
+  helm-install-integration:
+    - task: create-namespace-if-not-exists
+      docker-image: adp-helm-kubectl
+      docker-flags: &docker_flags_kube_config
+        - "--env HOME=${env.HOME}"
+        - "--env K8S_NAMESPACE=${env.K8S_NAMESPACE}"
+        - "--env KUBECONFIG=${env.KUBECONFIG}"
+        - "--env ENABLE_HELM_V3"
+        - "--env HELM_VERSION"
+        - "--env SELI_ARTIFACTORY_REPO_USER=${env.SELI_ARTIFACTORY_REPO_USER}"
+        - "--env SELI_ARTIFACTORY_REPO_PASS=\"${env.SELI_ARTIFACTORY_REPO_PASS}\""
+        - "--env COLLECT_LOGS_SCRIPT_LOCATION"
+        - "--volume ${env.PWD}:${env.PWD}"
+        - "--volume ${env.HOME}:${env.HOME}"
+        - "--volume ${env.KUBECONFIG}:${env.KUBECONFIG}"
+      cmd: kubectl create namespace ${env.K8S_NAMESPACE} || true
+    - task: helm-install-prep
+      docker-image: adp-helm-kubectl
+      docker-flags: *docker_flags_kube_config
+      cmd: kubectl create secret generic ${image-secret}
+        --from-file=.dockerconfigjson=$HOME/.docker/config.json
+        --type=kubernetes.io/dockerconfigjson
+        --namespace ${env.K8S_NAMESPACE} || true
+    - task: helm-install-integration
+      docker-image: adp-helm-kubectl
+      docker-flags: *docker_flags_kube_config
+      cmd: helm upgrade
+        --devel
+        --install ${env.HELM_RELEASE}-integration .bob/${common.helm-chart-name}-internal-integration/${common.helm-chart-name}-integration-${var.version}.tgz
+        --namespace ${env.K8S_NAMESPACE}
+        --set eric-log-shipper.logshipper.autodiscover.namespace=${env.K8S_NAMESPACE}
+        --set imageCredentials.registry.pullSecret=${image-secret}
+        --timeout ${env.HELM_INSTALL_TIMEOUT}
+        --wait
+
+  validate-fossa-license-agreement:
+    - task: validate-fossa-license-agreement
+      docker-image: adp-release-auto
+      cmd: license-agreement validate
+        -d ${dependency-file-name}
+        --license-agreement ${license-agreement-file-name}
+
+  upload-license-agreement-ci-internal:
+    - rule: validate-fossa-license-agreement
+    - task: upload-license-agreement-ci-internal
+      docker-image: adp-release-auto
+      cmd: upload_file.sh
+        --filename ${license-agreement-file-name}
+        --completeurl "${doc-arm-ci-repo}/documents/${var.version}/${license-agreement-file-name}"
+        --api-token "${env.SELI_ARTIFACTORY_REPO_PASS}"
+        --overwrite true
+
+  validate-service-ports:
+    - task: validate-service-ports
+      docker-image: adp-release-auto
+      cmd: service-ports validate --service-ports-file ${service-ports-file-path}
+
+  upload-service-ports-ci-internal:
+    - rule: validate-service-ports
+    - task: upload-service-ports-ci-internal
+      docker-image: adp-release-auto
+      cmd: upload_file.sh
+        --filename ${service-ports-file-path}
+        --completeurl "${doc-arm-ci-repo}/documents/${var.version}/${service-ports-file-name}"
+        --api-token "${env.SELI_ARTIFACTORY_REPO_PASS}"
+        --overwrite true
+
+  generate-structured-data-ci-internal:
+    - task: generate-structured-data-ci-internal
+      docker-image: adp-release-auto
+      cmd: structure-data generate
+        --debug
+        --service-name ${common.helm-chart-name}
+        --apr-product "APR 201 640"
+        --foss-license-agreement ${doc-arm-ci-repo}/documents/${var.version}/${license-agreement-file-name}
+        --service_ports ${doc-arm-ci-repo}/documents/${var.version}/${service-ports-file-name}
+        --output .
+
+  validate-structured-data:
+    - task: validate-structured-data
+      docker-image: adp-release-auto
+      cmd: structure-data validate
+            --file ${structured-data-file-name}
+
+  upload-structured-data-ci-internal:
+    - rule: validate-structured-data
+    - task: upload-structured-data-ci-internal
+      docker-image: adp-release-auto
+      cmd: structure-data upload
+        --file ${structured-data-file-name}
+        --url ${doc-arm-ci-repo}/documents/${var.version}
+        --token ${env.SELI_ARTIFACTORY_REPO_PASS}
+
+  # Upload zip package documents to ARM and refresh adp portal
+  marketplace-upload-dev:
+    - task: upload-doc-to-arm
+      docker-image: adp-release-auto
+      cmd: marketplace upload --arm-api-token ${env.SELI_ARTIFACTORY_REPO_PASS}
+        --arm-url ${doc-arm-dev-repo}
+        --config config/doc_handler_upload_config.config
+        --dev
+        --debug
+        --refresh
+        --portal-token ${env.ADP_PORTAL_API_KEY}
+
+  # Generate documents: cpi sdifs and raml hml doc
+  generate-docs:
+    - task: markdown-to-pdf
+      docker-image: adp-release-auto
+      cmd: 'doc-handler generate --config config/handler-pdf-config.yaml
+                                     --output ./build/doc/pdf
+                                     --stylesheet doc/stylesheet/stylesheet.css
+                                     --format pdf'
+    # - task: asciidoc-to-sdif
+    #  docker-image: adp-asciidoc-builder
+    #  cmd: /adp_build_doc.sh --project-dir=${env.PWD} --build-dir=${env.PWD}/build
+    - task: prepare-for-marketplace
+      docker-image: adp-release-auto
+      cmd: 'doc-handler generate --config config/doc_handler_config.config
+                                       --output ./build/doc/html
+                                       --format html
+                                       --zip'
